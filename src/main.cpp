@@ -156,6 +156,14 @@ void autonomous()
   // }
 }
 
+//Outtake function
+void outTake() {
+  outtake.setVelocity(60, percent);
+  outtake.spinToPosition(90, degrees, true);
+  outtake.spinToPosition(0, degrees, true);
+  outtake.stop();
+}
+
 
 /// @brief Runs during the UserControl section of the competition
 void usercontrol() 
