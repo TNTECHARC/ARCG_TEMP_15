@@ -156,23 +156,24 @@ void autonomous()
   // }
 }
 
-//Outtake function
-void outTake() {
-  outtake.setVelocity(60, percent);
-  outtake.spinToPosition(90, degrees, true);
-  outtake.spinToPosition(0, degrees, true);
-  outtake.stop();
-}
 
 /// @brief Runs during the UserControl section of the competition
 void usercontrol() 
 {
+  bool isSpinning = false;
+
   // User control code here, inside the loop
   while (1) {
 
-    if(Controller1.ButtonR1.pressing())
+    if(Controller1.ButtonR1.pressing() && !isSpinning)
     {
-      revolver.spinToPosition(360, degrees, 100);
+      thread revSpin = thread(moveSlot);
+      isSpinning = true;
+    }
+
+    if(!Controller1.ButtonR1.pressing() && isSpinning)
+    {
+      isSpinning = false;
     }
 
     if(Controller1.ButtonA.pressing())

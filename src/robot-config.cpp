@@ -22,8 +22,8 @@ motor L4 = motor(PORT9, ratio6_1, false);
 ///////////////////////////////////////////
 
 //System
-motor revolver = motor(PORT1, ratio36_1, false);
-motor outtake = motor(PORT10, ratio36_1, false);
+motor revolver = motor(PORT10, ratio36_1, false);
+motor outtake = motor(PORT1, ratio36_1, false);
 
 //////////// Odometry Sensors ////////////
 //TODO: CHANGE THE NAMES OF THESE
