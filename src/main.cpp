@@ -31,7 +31,7 @@ using namespace vex;
     motor_group(L1, L2, L3, L4), // Left drive train motors
     motor_group(R1, R2, R3, R4), // Right drive train motors
     PORT6,               // Inertial Sensor Port
-    3,                   // The diameter size of the wheel in inches
+    2.66,                   // The diameter size of the wheel in inches
     1,                   // 
     12,                   // The maximum amount of the voltage used in the drivebase (1 - 12)
     odomType
@@ -167,8 +167,9 @@ void moveSlot()
 void outTake() {
   outtake.setVelocity(60, percent);
   outtake.spinToPosition(90, degrees, true);
-  outtake.spin(reverse);
-  outtake.stop();
+  outtake.spin(reverse, 8, volt);
+  wait(0.5, sec);
+  outtake.stop(hold);
 }
 
 
@@ -189,6 +190,16 @@ void usercontrol()
     if(Controller1.ButtonA.pressing())
     {
       thread outtakeThread = thread(outTake);
+    }
+
+    if(Controller1.ButtonB.pressing())
+    {
+      for(int i = 0; i < 6; i++)
+      {
+        outTake();
+        moveSlot();
+        waitUntil(!revolver.isSpinning());
+      }
     }
 
     chassis.arcade();
