@@ -163,6 +163,11 @@ void usercontrol()
   // User control code here, inside the loop
   while (1) {
 
+    if(Controller1.ButtonR1.pressing())
+    {
+      revolver.spinToPosition(360, degrees, 100);
+    }
+
     chassis.arcade();
     wait(20, msec); // Sleep the task for a short amount of time to
   }
