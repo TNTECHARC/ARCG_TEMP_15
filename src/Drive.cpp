@@ -14,6 +14,8 @@ inertialSensor(inertial(inertialPORT))
 {
     this->wheelDiameter = wheelDiameter;
     this->wheelRatio = wheelRatio;
+    this->driveMinVoltage = 3.0;
+    this->turnMinVoltage = 3.0;
     this->driveMaxVoltage = maxVoltage;
     this->turnMaxVoltage = maxVoltage;
     this->odomType = odomType;
@@ -202,13 +204,16 @@ void Drive::brake(bool left, bool right, brakeType type)
 /// @param distance The distance to drive in inches
 void Drive::driveDistance(float distance)
 {
-    driveDistance(distance, driveMaxVoltage);
+    driveDistance(distance, driveMinVoltage, driveMaxVoltage, false);
 }
+
 
 /// @brief Uses the drivetrain to drive the given distance in inches
 /// @param distance The distance to drive in inches
+/// @param minVoltage The min amount of voltage used to drive
 /// @param maxVoltage The max amount of voltage used to drive
-void Drive::driveDistance(float distance, float maxVoltage)
+/// @param precedence True: Activates concurrent to other steps; False: Waits
+void Drive::driveDistance(float distance, float minVoltage, float maxVoltage, bool precedence)
 {
     // Creates PID objects for linear and angular output
     //float Kp, float Ki, float Kd, float settleError, float timeToSettle, float endTime
@@ -239,9 +244,14 @@ void Drive::driveDistance(float distance, float maxVoltage)
         linearOutput = clamp(linearOutput, -maxVoltage, maxVoltage);
         angularOutput = clamp(angularOutput, -maxVoltage, maxVoltage);
 
+        if(linearOutput > 0 && linearOutput < 2)
+            linearOutput = 2;
+        else if(linearOutput < 0 && linearOutput > -2)
+            linearOutput = -2;
+
         // Drives motors according to the linear Output and includes the linear Output to keep the robot in a straight path relative to is start heading
         driveMotors(linearOutput + angularOutput, linearOutput - angularOutput);
-        wait(10, msec);
+        wait(5, msec);
     }
 
     
@@ -260,20 +270,22 @@ void Drive::turn(float turnDegrees){
 /// @param turnDegrees A number in degrees the robot should rotate
 /// @param maxVoltage The max amount of voltage used to turn
 void Drive::turn(float turnDegrees, float maxVoltage){
-    turnToAngle(turnDegrees + inertial1.heading(), maxVoltage);
+    turnToAngle(turnDegrees + inertial1.heading(), turnMinVoltage, maxVoltage, false);
 }
 
 /// @brief Turns to an absolute specific angle
 /// @param angle The angle to turn to in degrees (0 - 360)
 void Drive::turnToAngle(float angle)
 {
-    turnToAngle(angle, turnMaxVoltage);
+    turnToAngle(angle, turnMinVoltage, turnMaxVoltage, false);
 }
 
 /// @brief Turns to an absolute specific angle
 /// @param angle The angle to turn to in degrees (0 - 360)
+/// @param minVoltage The min amount of voltage used to turn
 /// @param maxVoltage The max amount of voltage used to turn
-void Drive::turnToAngle(float angle, float maxVoltage)
+/// @param precedence True: Activates concurrent to other steps; False: Waits
+void Drive::turnToAngle(float angle, float minVoltage, float maxVoltage, bool precedence)
 {
     updatePosition();
     angle = inTermsOfNegative180To180(angle);

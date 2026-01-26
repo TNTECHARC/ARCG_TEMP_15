@@ -435,8 +435,8 @@ void setDriveTrainConstants()
         0.2, // Kp - Proportion Constant
         0.0, // Ki - Integral Constant
         0.1, // Kd - Derivative Constant
-        0.05, // Settle Error
-        300, // Time to Settle
+        0.5, // Settle Error
+        100, // Time to Settle
         3000 // End Time
     );
 
@@ -446,7 +446,7 @@ void setDriveTrainConstants()
         0,      // Ki - Integral Constant
         0,      // Kd - Derivative Constant 
         0.5,    // Settle Error
-        300,    // Time to Settle
+        100,    // Time to Settle
         3000    // End Time
     );
     
@@ -456,19 +456,24 @@ void setDriveTrainConstants()
 void Auton_Right1() {
     Brain.Screen.print("EXECUTING: Auton 1 - RIGHT");
     
-
-    chassis.driveDistance(36);
-    chassis.turnToAngle(90);
-    chassis.driveDistance(18);
+    /*
+        -- Fix:: Settle Time && Voltage (drive/turn stoppage and step timing)
+        -- Fix:: Turning  @ Step 4 (see Whiteboard) >> Currently: Hitting Goal Post
+        -- Modify:: drive/turn functions (include: minVoltage, precedence)\
+        -- Add:: Additional tests and hardware as needed (finalize 24" and 15" ASAP)
+    */
+    chassis.driveDistance(36, 3.0, 12.0, false);
+    chassis.turnToAngle(90, 3.0, 12.0, false);
+    chassis.driveDistance(18, 3.0, 12.0, false);
     moveIntake();
     wait(3, sec);
-    chassis.driveDistance(-28);
-    chassis.turnToAngle(0);
-    chassis.driveDistance(24);
-    chassis.turnToAngle(-90);
-    chassis.driveDistance(12);
-    chassis.turnToAngle(-180);
-    chassis.driveDistance(48);
+    chassis.driveDistance(-28, 3.0, 12.0, false);
+    chassis.turnToAngle(0, 3.0, 12.0, false);
+    chassis.driveDistance(24, 3.0, 12.0, false);
+    chassis.turnToAngle(-90, 3.0, 12.0, false);
+    chassis.driveDistance(12, 3.0, 12.0, false);
+    chassis.turnToAngle(-180, 3.0, 12.0, false);
+    chassis.driveDistance(42, 3.0, 12.0, false);
     unload(blue);
     // Load Red Balls
 }
