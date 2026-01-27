@@ -73,7 +73,7 @@ void preAuton()
 
   vex::color colors[8] = {vex::color::red, vex::color::red, vex::color::red, vex::color::red, 
                           vex::color::blue, vex::color::blue, vex::color::blue, vex::color::blue};
-  std::string names[8] = {"Auton L11", "Auton R1", "Auton L3", "Auton R3", 
+  std::string names[8] = {"Auton L1", "Auton R1", "Auton L3", "Auton R3", 
                           "Auton L2", "Auton R2", "Auton L4", "Auton R4"};
   Button buttons[9];
   createAutonButtons(colors, names, buttons);
@@ -124,6 +124,7 @@ void autonomous()
 {
   isInAuton = true;
   chassis.setPosition(0,0,0);
+  setDriveTrainConstants();
   Auton_Right1();
   /* Add switch for input button mapping
   
@@ -432,22 +433,22 @@ void setDriveTrainConstants()
 {
     // Set the Drive PID values for the DriveTrain
     chassis.setDriveConstants(
-        0.2, // Kp - Proportion Constant
+        2.481, // Kp - Proportion Constant
         0.0, // Ki - Integral Constant
-        0.1, // Kd - Derivative Constant
-        0.5, // Settle Error
+        10.0, // Kd - Derivative Constant
+        1.0, // Settle Error
         100, // Time to Settle
-        3000 // End Time
+        25000 // End Time
     );
 
     // Set the Turn PID values for the DriveTrain
     chassis.setTurnConstants(
-        0.4,    // Kp - Proportion Constant
-        0,      // Ki - Integral Constant
-        0,      // Kd - Derivative Constant 
-        0.5,    // Settle Error
-        100,    // Time to Settle
-        3000    // End Time
+        0.504,    // Kp - Proportion Constant
+        0.0,      // Ki - Integral Constant
+        4.05,      // Kd - Derivative Constant 
+        1.0,    // Settle Error
+        500,    // Time to Settle
+        2500    // End Time
     );
     
 }
@@ -461,19 +462,51 @@ void Auton_Right1() {
         -- Modify:: drive/turn functions (include: minVoltage, precedence)
         -- Add:: Additional tests and hardware as needed (finalize 24" and 15" ASAP)
     */
-    chassis.driveDistance(38, 3.0, 12.0, false);
-    chassis.turnToAngle(90, 3.0, 12.0, false);
-    chassis.driveDistance(18, 3.0, 12.0, false);
+
+    // Initial Diagnostics
+    std::cout << std::endl << std::endl << std::endl;
+    std::cout << "_______________________________" << std::endl;
+    std::cout << "Starting Position:  " << chassis.getCurrentMotorPosition() << std::endl;
+    std::cout << "Starting Heading:   " << inertial1.heading() << std::endl;
+
+    // Drive from Origin to Loader (Right)
+    chassis.driveDistance(32, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(0.5, sec);
+    chassis.turnToAngle(90, 3.0, 9.0, false);
+    std::cout << inertial1.heading() << std::endl;
+    wait(0.5, sec);
+    chassis.driveDistance(7.5, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+
+    // Load Blocks from Loader (including: Extra given Loader Blocks [6])
+    wait(0.5, sec);
     moveIntake();
-    wait(3, sec);
-    chassis.driveDistance(-16, 3.0, 12.0, false);
-    chassis.turnToAngle(0, 3.0, 12.0, false);
-    chassis.driveDistance(26, 3.0, 12.0, false);
-    chassis.turnToAngle(-170, 3.0, 12.0, false);
-    chassis.driveDistance(48, 3.0, 12.0, false);
+    wait(2.5, sec); // Adjust time as needed for optimal loading
+
+    // Reverse to Load Side Blocks [2]
+    chassis.driveDistance(-15.5, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(0.5, sec);
+    chassis.turnToAngle(0, 3.0, 9.0, false);
+    std::cout << inertial1.heading() << std::endl;
+    wait(0.5, sec);
+    chassis.driveDistance(14, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(2, sec);
+
+    // Drive to Center/Park Zone to EXCHANGE Blocks
+    chassis.driveDistance(-46, 3.0, 12.0, false);
+    wait(0.5, sec);
+    chassis.turn(180, 9.0);
+    std::cout << inertial1.heading() << std::endl;
+
+    // EXCHANGE Blocks with Other Robot
     chassis.brake();
     unload(blue);
-    // Load Red Balls
+    
+    // Load Alliance Blocks
+    // Score Alliance Blocks (either in BOTH Long && ONE Center Goals, OR ONE Long && BOTH Center Goals)
 }
 
 
@@ -505,7 +538,7 @@ void Auton_Left1() {
     chassis.turnToAngle(-90, 3.0, 12.0, false);
     chassis.driveDistance(18, 3.0, 12.0, false);
     moveIntake();
-    wait(3, sec);
+    wait(5, sec);
     chassis.driveDistance(-16, 3.0, 12.0, false);
     chassis.turnToAngle(0, 3.0, 12.0, false);
     chassis.driveDistance(26, 3.0, 12.0, false);
@@ -513,7 +546,9 @@ void Auton_Left1() {
     chassis.driveDistance(48, 3.0, 12.0, false);
     chassis.brake();
     unload(red);
-    // Load Blue Balls
+    // Load Blue Blocks
+    // Grab Blue Park Zone Blocks
+    // Park
 }
 
 

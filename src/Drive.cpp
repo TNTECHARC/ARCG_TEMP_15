@@ -244,19 +244,20 @@ void Drive::driveDistance(float distance, float minVoltage, float maxVoltage, bo
         linearOutput = clamp(linearOutput, -maxVoltage, maxVoltage);
         angularOutput = clamp(angularOutput, -maxVoltage, maxVoltage);
 
-        if(linearOutput > 0 && linearOutput < 2)
-            linearOutput = 2;
-        else if(linearOutput < 0 && linearOutput > -2)
-            linearOutput = -2;
+        if(linearOutput > 0 && linearOutput < 1)
+            linearOutput = 1;
+        else if(linearOutput < 0 && linearOutput > -1)
+            linearOutput = -1;
 
         // Drives motors according to the linear Output and includes the linear Output to keep the robot in a straight path relative to is start heading
         driveMotors(linearOutput + angularOutput, linearOutput - angularOutput);
-        wait(5, msec);
+        wait(3, msec);
     }
 
     
     // Stops the motors once PID has settled
-    //brake();
+    brake();
+    std::cout << "\nsettle\n";
     updatePosition();
 }
 
@@ -295,6 +296,10 @@ void Drive::turnToAngle(float angle, float minVoltage, float maxVoltage, bool pr
         float error = inTermsOfNegative180To180(inertial1.heading()-angle);
         float output = turnPID.compute(error);
         output = clamp(output, -maxVoltage, maxVoltage);
+        if(output > 0 && output < 1.5)
+            output = 1.5;
+        else if(output < 0 && output > -1.5)
+            output = -1.5;
         driveMotors(-output, output);
         task::sleep(10);
     }while(!turnPID.isSettled());

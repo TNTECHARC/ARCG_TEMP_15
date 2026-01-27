@@ -42,7 +42,7 @@ PID::PID(float Kp, float Ki, float Kd, float settleError, float timeToSettle, fl
     this->endTime = endTime;
 }
 
-/// @brief Uses the given error a puts it through a PID formula the output is the result
+/// @brief Uses the given error & puts it through a PID formula; the output is the result
 /// @param error The desired position minus the current position
 /// @return the output of the PID formula
 float PID::compute(float error)
