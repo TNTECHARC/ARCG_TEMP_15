@@ -183,11 +183,15 @@ void outTake() {
   if(!revolver.isSpinning())
   {
     armUp = true;
-    outtake.setVelocity(60, percent);
-    outtake.spinToPosition(110, degrees, true);
-    outtake.spin(reverse, 10, volt);
+    outtakeLeft.setVelocity(60, percent);
+    outtakeRight.setVelocity(60, percent);
+    outtakeLeft.spinToPosition(110, degrees, true);
+    outtakeRight.spinToPosition(110, degrees, true);
+    outtakeLeft.spin(reverse, 10, volt);
+    outtakeRight.spin(reverse, 10, volt);
     wait(0.4, sec);
-    outtake.stop(hold);
+    outtakeLeft.stop(hold);
+    outtakeRight.stop(hold);
     armUp = false;
     moveSlot();
 
@@ -211,8 +215,7 @@ void bottomOuttakeFunction()
   {
     isBottomOuttakeRunning = true;
     armUp = true;
-    intakeLeft.spin(reverse, 12, volt);
-    intakeRight.spin(reverse, 12, volt);
+    intake.spin(reverse, 12, volt);
     bottomOuttake.setVelocity(100, percent);
     bottomOuttake.spinToPosition(200, degrees, true);
     bottomOuttake.spin(reverse, 12, volt);
@@ -331,8 +334,7 @@ void moveIntake()
 {
   if(!revolver.isSpinning())
   {
-    intakeLeft.spin(forward, 12, volt);
-    intakeRight.spin(forward, 12, volt);
+    intake.spin(forward, 12, volt);
   }
 }
 
@@ -402,8 +404,7 @@ void usercontrol()
       matchLoader.set(false);
       if(!Controller1.ButtonL1.pressing() && !Controller1.ButtonR2.pressing())
       {
-        intakeLeft.spin(reverse, 0, volt);
-        intakeRight.spin(reverse, 0, volt);
+        intake.spin(reverse, 0, volt);
       }
     }
 
@@ -471,39 +472,38 @@ void Auton_Right1() {
     // Initial Diagnostics
     std::cout << std::endl << std::endl << std::endl;
     std::cout << "_______________________________" << std::endl;
-    std::cout << std::setw(30) << "EXECUTING: Auton Right" << std::endl;
+    std::cout << std::setw(27) << "EXECUTING: Auton Right" << std::endl;
     std::cout << "Starting Position:  " << chassis.getCurrentMotorPosition() << std::endl;
     std::cout << "Starting Heading:   " << inertial1.heading() << std::endl;
 
     // Drive from Origin to Loader (Right)
-    chassis.driveDistance(32, 3.0, 12.0, false);
+    chassis.driveDistance(34, 3.0, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.5, sec);
+    wait(0.25, sec);
     chassis.turnToAngle(90, 3.0, 9.0, false);
     std::cout << inertial1.heading() << std::endl;
-    wait(0.5, sec);
+    wait(0.25, sec);
+    moveIntake();
 
     // Load Blocks from Loader (including: Extra given Loader Blocks [6])
-    chassis.driveDistance(7.5, 3.0, 12.0, false);
+    chassis.driveDistance(11, 3.0, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.5, sec);
-    moveIntake();
-    wait(4, sec); // Adjust time as needed for optimal loading
+    wait(2, sec); // Adjust time as needed for optimal loading
 
     // Reverse to Load Side Blocks [2]
-    chassis.driveDistance(-15.5, 3.0, 12.0, false);
+    chassis.driveDistance(-12, 3.0, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.5, sec);
+    wait(0.25, sec);
     chassis.turnToAngle(0, 3.0, 9.0, false);
     std::cout << inertial1.heading() << std::endl;
-    wait(0.5, sec);
-    chassis.driveDistance(14, 3.0, 12.0, false);
+    wait(0.25, sec);
+    chassis.driveDistance(12.5, 3.0, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(2, sec);
+    wait(1.5, sec);
 
-    // Drive to Center/Park Zone to EXCHANGE Blocks
-    chassis.driveDistance(-46, 3.0, 12.0, false);
-    wait(0.5, sec);
+    // Drive to Center/Park Zone to EXCHANGE Blocks ??
+    chassis.driveDistance(-52, 3.0, 12.0, false);
+    wait(0.25, sec);
     chassis.turn(180, 9.0);
     std::cout << inertial1.heading() << std::endl;
 

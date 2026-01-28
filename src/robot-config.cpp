@@ -9,7 +9,7 @@ controller Controller1;
 ///////////////////////////////////////////
 
 //////////// Drive Train Motors ////////////
-
+// From Back View
 motor R1 = motor(PORT12, ratio6_1, true);
 motor R2 = motor(PORT13, ratio6_1, true);
 motor R3 = motor(PORT14, ratio6_1, true);
@@ -23,9 +23,14 @@ motor L4 = motor(PORT20, ratio6_1, false);
 
 //System
 motor revolver = motor(PORT10, ratio36_1, false);
-motor outtake = motor(PORT1, ratio36_1, false);
+
+motor outtakeLeft = motor(PORT1, ratio36_1, false);
+motor outtakeRight = motor(PORT11, ratio36_1, true);
+motor_group outtake = motor_group(outtakeLeft, outtakeRight);
+
 motor intakeLeft = motor(PORT2, ratio36_1, false);
 motor intakeRight = motor(PORT5, ratio36_1, true);
+motor_group intake = motor_group(intakeLeft, intakeRight);
 
 //////////// Odometry Sensors ////////////
 //TODO: CHANGE THE NAMES OF THESE
