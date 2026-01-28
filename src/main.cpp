@@ -464,9 +464,8 @@ void Auton_Right1() {
     Brain.Screen.print("EXECUTING: Auton 1 - RIGHT");
     
     /*
-        -- Fix:: Settle Time && Voltage (drive/turn stoppage and step timing)
         -- Modify:: drive/turn functions (include: minVoltage, precedence)
-        -- Add:: Additional tests and hardware as needed (finalize 24" and 15" ASAP)
+        -- Add:: Additional tests and hardware as needed
     */
 
     // Initial Diagnostics
