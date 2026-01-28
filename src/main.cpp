@@ -464,19 +464,19 @@ void setDriveTrainConstants()
 void Auton_Right1() {
     Brain.Screen.print("EXECUTING: Auton 1 - RIGHT");
     
-    /*
-        -- Modify:: drive/turn functions (include: minVoltage, precedence)
-        -- Add:: Additional tests and hardware as needed
-    */
+/*
+    -- Modify:: drive/turn functions (include: minVoltage, precedence)
+    -- Add:: Additional tests and hardware as needed
+*/
 
-    // Initial Diagnostics
+// Initial Diagnostics
     std::cout << std::endl << std::endl << std::endl;
     std::cout << "_______________________________" << std::endl;
     std::cout << std::setw(27) << "EXECUTING: Auton Right" << std::endl;
     std::cout << "Starting Position:  " << chassis.getCurrentMotorPosition() << std::endl;
     std::cout << "Starting Heading:   " << inertial1.heading() << std::endl;
 
-    // Drive from Origin to Loader (Right)
+// Drive from Origin to Loader (Right)
     chassis.driveDistance(34, 3.0, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.25, sec);
@@ -485,29 +485,34 @@ void Auton_Right1() {
     wait(0.25, sec);
     moveIntake();
 
-    // Load Blocks from Loader (including: Extra given Loader Blocks [6])
+// Load Blocks from Loader (including: Extra given Loader Blocks [6])
+    // Not loading reliably, needs tuning && other systems
+    // Best: 2 Blocks, USUALLY none.
     chassis.driveDistance(11, 3.0, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(2, sec); // Adjust time as needed for optimal loading
 
-    // Reverse to Load Side Blocks [2]
+// Reverse to Load Side Blocks [2]
     chassis.driveDistance(-12, 3.0, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.25, sec);
     chassis.turnToAngle(0, 3.0, 9.0, false);
     std::cout << inertial1.heading() << std::endl;
     wait(0.25, sec);
+    // Loads BOTH Side Blocks consistently && reliably
     chassis.driveDistance(12.5, 3.0, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(1.5, sec);
 
-    // Drive to Center/Park Zone to EXCHANGE Blocks ??
+// Drive to Center/Park Zone to EXCHANGE Blocks
+    // Driving to Center needs tuning;
+    // Sometimes hits Park Zone.
     chassis.driveDistance(-52, 3.0, 12.0, false);
     wait(0.25, sec);
     chassis.turn(180, 9.0);
     std::cout << inertial1.heading() << std::endl;
 
-    // EXCHANGE Blocks with Other Robot
+// EXCHANGE Blocks with Other Robot ?? (May remove)
     chassis.brake();
     unload(blue);
     
