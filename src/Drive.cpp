@@ -87,18 +87,16 @@ void Drive::arcade()
 {
     int leftY = 0;
     int rightX = 0;
-    if(Controller1.Axis3.position(percent) >= 0)
+    int arcadePower = 3;
+    if (Controller1.Axis3.position(percent) >= 0)
         leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(pow(10, arcadePower));
-    else                                                                                                                                                                                                                                                                                                                                                                                                                          
-        leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(-1 * (pow(10, arcadePower)));
-    
-    if(Controller1.Axis1.position(percent) >= 0)
+    else                                                                                                                                                                                                                                                                                                                                                                                                                  
+        leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(pow(10, arcadePower));
+    if (Controller1.Axis1.position(percent) >= 0)
         rightX = pow(Controller1.Axis1.position(percent), arcadePower)/(pow(10, arcadePower));
     else
-        rightX = pow(Controller1.Axis1.position(percent), arcadePower)/(-1 * (pow(10, arcadePower)));
+        rightX = pow(Controller1.Axis1.position(percent), arcadePower)/(pow(10, arcadePower));
 
-    leftY = clamp(leftY, -60, 60);
-    rightX = clamp(rightX,-60, 60);
     leftDrive.spin(forward, leftY+rightX, percent);
     rightDrive.spin(forward, leftY-rightX, percent);
 }
@@ -107,15 +105,16 @@ void Drive::arcade()
 void Drive::tank(){
     int leftY = 0;
     int rightX = 0;
+    
     if(Controller1.Axis3.position(percent) >= 0)
-        leftY = pow(Controller1.Axis3.position(percent),2)/100;
-    else
-        leftY = pow(Controller1.Axis3.position(percent),2)/-100;
+        leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(pow(10, arcadePower));
+    else                                                                                                                                                                                                                                                                                                                                                                                                                          
+        leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(-1 * (pow(10, arcadePower)));
     
     if(Controller1.Axis2.position(percent) >= 0)
-        rightX = pow(Controller1.Axis2.position(percent),2)/100;
+        rightX = pow(Controller1.Axis2.position(percent), arcadePower)/(pow(10, arcadePower));
     else
-        rightX = pow(Controller1.Axis2.position(percent),2)/-100;
+        rightX = pow(Controller1.Axis2.position(percent), arcadePower)/(-1 * (pow(10, arcadePower)));
 
     leftDrive.spin(forward, leftY, percent);
     rightDrive.spin(forward, rightX, percent);

@@ -58,7 +58,7 @@ float PID::compute(float error)
         integral = 0; 
     }
 
-    output = Kp*error + Ki*integral + Kd*derivative;
+    output = (Kp * error) + (Ki * integral) + (Kd * derivative);
     prevError = error;
 
     if(fabs(error) < settleError)
