@@ -22,6 +22,9 @@ using namespace vex;
 
   int odomType = NO_ODOM;
 
+  float velocity = 12.0;
+  bool boost = true;
+
   bool isInAuton = false;
   int lastPressed = 0;
 
@@ -34,7 +37,7 @@ using namespace vex;
     PORT6,               // Inertial Sensor Port
     2.75,              // The diameter size of the wheel in inches
     1,                   // 
-    12,                   // The maximum amount of the voltage used in the drivebase (1 - 12)
+    velocity,                   // The maximum amount of the voltage used in the drivebase (1 - 12)
     odomType,
     1,                  //Odometry wheel diameter (set to zero if no odom) (1.96 robot behind by .2)
     0,               //Odom pod1 offset 
@@ -339,6 +342,16 @@ void intakeMoveSlot()
   
 }
 
+void setBoost() {
+  if (!boost) {
+    velocity = 12.0;
+    boost = true;
+  } else if (boost) {
+    velocity = 1.0;
+    boost = false;
+  }
+}
+
 /// @brief Runs during the UserControl section of the competition
 void usercontrol() 
 {
@@ -357,8 +370,8 @@ void usercontrol()
 
   Controller1.ButtonL1.pressed(moveIntake);
   Controller1.ButtonL2.pressed(moveIntake);
-  
 
+  Controller1.ButtonX.pressed(setBoost);
 
   // User control code here, inside the loop
   while (1) 
@@ -369,7 +382,8 @@ void usercontrol()
       if(armUp == false) {
         moveSlot();
       }
-    } 
+    }
+
     // if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && isSlotFull())
     //   {
     //     if(armUp == false) {
