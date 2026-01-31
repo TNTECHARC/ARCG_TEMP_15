@@ -23,12 +23,12 @@ motor L4 = motor(PORT20, ratio6_1, false);
 
 //System
 motor revolver = motor(PORT10, ratio36_1, false);
-motor outtake1 = motor(PORT1, ratio36_1, false);
-motor outtake2 = motor(PORT11, ratio36_1, false);
+motor outtake1 = motor(PORT1, ratio18_1, true);
+motor outtake2 = motor(PORT11, ratio18_1, false);
 motor_group outtake = motor_group(outtake1, outtake2);
 
 motor intake1 = motor(PORT2, ratio36_1, false);
-motor intake2 = motor(PORT5, ratio36_1, false); 
+motor intake2 = motor(PORT5, ratio36_1, true); 
 motor_group intake = motor_group(intake1, intake2);
 
 //////////// Odometry Sensors ////////////
