@@ -132,7 +132,7 @@ void autonomous()
 
   chassis.setPosition(0,0,0);
   setDriveTrainConstants();
-  
+
   Auton_Right1();
   /* Add switch for input button mapping
   
@@ -478,7 +478,7 @@ int main()
 
 
 
-/// @brief Sets the PID values for the DriveTrain
+/// @brief Sets the PID values for the Chassis
 void setDriveTrainConstants()
 {
     // Set the Drive PID values for the DriveTrain
@@ -498,7 +498,7 @@ void setDriveTrainConstants()
         4.05,       // Kd - Derivative Constant 
         1.0,       // Settle Error
         500,      // Time to Settle
-        2500     // End Time
+        25000     // End Time
     );
     
 }
