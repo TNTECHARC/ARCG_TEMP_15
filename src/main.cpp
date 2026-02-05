@@ -148,7 +148,7 @@ void autonomous()
   chassis.setPosition(0,0,0);
   setDriveTrainConstants();
 
-  Auton_Right1();
+  Auton_Right2();
 
   /* Add switch for input button mapping
   
@@ -628,6 +628,135 @@ void setDriveTrainConstants()
     
 }
 
+
+// BREAK - Separate Autonomous Routines into separate Files when possible.
+
+
+// Auton SKILLS Routes
+/// @brief Auton SKILLS Right [RED] - 15 Inch Robot
+void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right)
+    Brain.Screen.print("EXECUTING: Auton SKILLS - RIGHT");
+
+// Initial Diagnostics
+    std::cout << std::endl << std::endl << std::endl;
+    std::cout << "_______________________________" << std::endl;
+    std::cout << std::setw(27) << "EXECUTING: Auton Skills - Right" << std::endl;
+    std::cout << "Starting Position:  " << chassis.getCurrentMotorPosition() << std::endl;
+    std::cout << "Starting Heading:   " << inertial1.heading() << std::endl;
+
+// Back from Origin to Side Blocks (Right)  {2 Blue}
+    chassis.driveDistance(-15, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(0.1, sec);
+    chassis.turn(-42, 9.0);
+    std::cout << inertial1.heading() << std::endl;
+    moveIntake();
+    chassis.driveDistance(42, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(1.5, sec); // Adjust time as needed for OPTIMAL LOADING once consistent
+  
+// Reverse && Drive to Side Blocks (Left)   {2 Blue}
+    chassis.driveDistance(-100, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(0.1, sec);
+    chassis.turn(180, 9.0);
+    std::cout << inertial1.heading() << std::endl;
+    wait(0.1, sec);
+    chassis.driveDistance(16, 3.0, 12.0, false);
+    wait(1, sec);
+
+// Score in Long Goal (Left)
+    chassis.driveDistance(-20, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(0.1, sec);
+    chassis.turn(90, 9.0);
+    std::cout << inertial1.heading() << std::endl;
+    wait(0.1, sec);
+    chassis.driveDistance(21, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    rise();
+    outTake(); // Changed from outTake() to outTakeAll() to SCORE && AUTO-ROTATE
+    fall();
+
+    // Test, Tune, Adjust AS NECESSARY
+    // IF Acceptable Consistency && Accuracy/Precision >> Add Center && Parking
+
+// Store Side Blocks IF NECESSARY --- Else: Store in 15 Inch
+
+// To Be Discussed, Tuned, Finalized
+    // AUTON SKILL RIGHT
+}
+
+
+/// @brief Auton SKILLS Left [RED] - 24 Inch Robot
+void AutonSkills_Left() { // Strategy: AUTON SKILLS (Left)
+    Brain.Screen.print("EXECUTING: Auton SKILLS - LEFT");
+
+// Initial Diagnostics
+    std::cout << std::endl << std::endl << std::endl;
+    std::cout << "_______________________________" << std::endl;
+    std::cout << std::setw(27) << "EXECUTING: Auton Skills - Left" << std::endl;
+    std::cout << "Starting Position:  " << chassis.getCurrentMotorPosition() << std::endl;
+    std::cout << "Starting Heading:   " << inertial1.heading() << std::endl;
+
+// Back from Origin to Loader (Left)
+    chassis.driveDistance(-36, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(0.1, sec);
+    chassis.turn(42, 9.0);
+    std::cout << inertial1.heading() << std::endl;
+
+// Intake && Store Blocks from Loader
+    moveIntake();
+    chassis.driveDistance(35, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    // Match Loader Function
+    wait(2, sec); // Adjust time as needed for OPTIMAL LOADING once consistent
+
+// Reverse && Drive to Loader (Right)
+    chassis.driveDistance(-20, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(0.1, sec);
+    chassis.turn(-90, 9.0);
+    std::cout << inertial1.heading() << std::endl;
+    wait(0.1, sec);
+    chassis.driveDistance(96, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(0.1, sec);
+    chassis.turn(90, 9.0);
+    std::cout << inertial1.heading() << std::endl;
+    wait(0.1, sec);
+
+// Intake && Store Blocks from Loader (Again)
+    chassis.driveDistance(20, 3.0, 12.0, false);
+    // Match Loader Function
+    wait(2, sec); // Adjust time as needed for OPTIMAL LOADING once consistent
+
+// Score in Long Goal (Right)
+    chassis.driveDistance(-32, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    wait(0.1, sec);
+    chassis.turn(180, 9.0);
+    std::cout << inertial1.heading() << std::endl;
+    chassis.driveDistance(6.5, 3.0, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    rise();
+    outTake(); // Changed from outTake() to outTakeAll() to SCORE && AUTO-ROTATE
+    fall();
+
+    // Test, Tune, Adjust AS NECESSARY
+    // IF Acceptable Consistency && Accuracy/Precision >> Add Center && Parking
+
+// Store Side Blocks IF NECESSARY --- Else: Store in 15 Inch
+
+// To Be Discussed, Tuned, Finalized
+    // AUTON SKILL LEFT
+}
+
+
+
+// Auton Match Routes
+
 /// @brief Auton Right Slot 1 [BLUE] - Write code for route within this function.
 void Auton_Right1() { // Strategy: Score (Right)
     Brain.Screen.print("EXECUTING: Auton 1 - RIGHT");
@@ -698,78 +827,16 @@ void Auton_Right1() { // Strategy: Score (Right)
     wait(5, sec);
 }
 
-
-/// @brief Auton Right Slot 2 [RED] - Write code for route within this function.
-void Auton_Right2() { // Strategy: AUTON SKILLS (Right)
-    Brain.Screen.print("EXECUTING: Auton SKILLS - RIGHT");
-
-// Initial Diagnostics
-    std::cout << std::endl << std::endl << std::endl;
-    std::cout << "_______________________________" << std::endl;
-    std::cout << std::setw(27) << "EXECUTING: Auton Skills - Right" << std::endl;
-    std::cout << "Starting Position:  " << chassis.getCurrentMotorPosition() << std::endl;
-    std::cout << "Starting Heading:   " << inertial1.heading() << std::endl;
-
-// Back from Origin to Store Park Zone BLOCKS (Right)
-    chassis.driveDistance(-18, 3.0, 12.0, false);
-    std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.25, sec);
-    moveIntake();
-    chassis.driveDistance(24, 3.0, 12.0, false);
-    std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.25, sec);
-    // Check Consistency of INTAKING / STORING Park Zone Blocks {+4 Blue}
-
-// Park Zone to LOAD Left Loader Blocks                 {+3 Blue, +3 Red}
-    chassis.driveDistance(40, 3.0, 12.0, false);
-    std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.25, sec);
-    chassis.turn(-90, 9.0);
-    std::cout << inertial1.heading() << std::endl;
-    wait(0.25, sec);
-    chassis.driveDistance(4, 3.0, 12.0, false);
-    std::cout << chassis.getCurrentMotorPosition() << std::endl;
-
-// Left Loader to Load Side Blocks                      {+2 Blue}
-    chassis.driveDistance(-16, 3.0, 12.0, false);
-    std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.25, sec);
-    chassis.turn(90, 9.0);
-    std::cout << inertial1.heading() << std::endl;
-    wait(1, sec);
-
-// Drive to Upper Center Goal to SCORE                  {+7 Blue}
-    // Needs to be tested, tuned, finalized
-    chassis.driveDistance(-32, 3.0, 12.0, false);
-    std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.25, sec);
-    chassis.turn(-160, 9.0);
-    std::cout << inertial1.heading() << std::endl;
-    chassis.driveDistance(64, 3.0, 12.0, false);
-    std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    // Outtake Blue Blocks
-    rise();
-    wait(0.5, sec);
-    outTake();
-    wait(3, sec);
-    fall();
-    // TEST
-
-// To Be Discussed, Tuned, Finalized
-
-
-    // AUTON SKILL RIGHT (FLASH Park Zone)
-}
-
-/// @brief Auton Right Slot 3 [BLUE] - Write code for route within this function.
-void Auton_Right3() {
+/// @brief Auton Right Slot 2 [BLUE] - Write code for route within this function.
+void Auton_Right2() {
     Brain.Screen.print("EXECUTING: Auton 3 - RIGHT");
 }
 
-/// @brief Auton Right Slot 4 [RED]- Write code for route within this function.
-void Auton_Right4() {
+/// @brief Auton Right Slot 3 [RED]- Write code for route within this function.
+void Auton_Right3() {
     Brain.Screen.print("EXECUTING: Auton 4 - RIGHT");
 }
+
 
 /// @brief Auton Left Slot 1 [BLUE]- Write code for route within this function.
 void Auton_Left1() { // Strategy: Score (Left)
@@ -834,40 +901,12 @@ void Auton_Left1() { // Strategy: Score (Left)
     // For AUTON WIN POINT
 }
 
-
-/// @brief Auton Left Slot 2 [RED] - Write code for route within this function.
-void Auton_Left2() { // Strategy: AUTON SKILLS (Left)
-    Brain.Screen.print("EXECUTING: Auton SKILLS - LEFT");
-
-// Initial Diagnostics
-    std::cout << std::endl << std::endl << std::endl;
-    std::cout << "_______________________________" << std::endl;
-    std::cout << std::setw(27) << "EXECUTING: Auton Skills - Left" << std::endl;
-    std::cout << "Starting Position:  " << chassis.getCurrentMotorPosition() << std::endl;
-    std::cout << "Starting Heading:   " << inertial1.heading() << std::endl;
-// Drive from Origin to SIDE BLOCKS (Left)
-    chassis.driveDistance(-8, 3.0, 12.0, false);
-    std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.25, sec);
-    chassis.turn(42, 9.0);
-    std::cout << inertial1.heading() << std::endl;
-    moveIntake();
-    chassis.driveDistance(84, 3.0, 12.0, false);
-    wait(0.25, sec);
-    // TEST
-
-// To Be Discussed, Tuned, Finalized
-
-
-    // AUTON SKILL RIGHT (FLASH Park Zone)
+/// @brief Auton Left Slot 2 [BLUE] - Write code for route within this function.
+void Auton_Left2() {
+    Brain.Screen.print("EXECUTING: Auton 2 - LEFT");
 }
 
-/// @brief Auton Left Slot 3 [BLUE] - Write code for route within this function.
+/// @brief Auton Left Slot 3 [RED] - Write code for route within this function.
 void Auton_Left3() {
     Brain.Screen.print("EXECUTING: Auton 3 - LEFT");
-}
-
-/// @brief Auton Left Slot 4 [RED] - Write code for route within this function.
-void Auton_Left4() {
-    Brain.Screen.print("EXECUTING: Auton 4 - LEFT");
 }
