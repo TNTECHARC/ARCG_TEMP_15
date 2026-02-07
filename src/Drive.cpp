@@ -88,8 +88,18 @@ void Drive::arcade()
     int leftY = Controller1.Axis3.position(percent);
     int rightX = Controller1.Axis1.position(percent);
 
-    leftDrive.spin(forward, leftY+rightX, percent);
-    rightDrive.spin(forward, leftY-rightX, percent);
+    if (abs(leftY) < arcadeDeadzone) { leftY = 0; }
+
+    if (abs(rightX) < arcadeDeadzone) { rightX = 0; }
+
+    float signY = (leftY > 0) ? 1.0f : -1.f;
+    float signX = (rightX > 0) ? 1.0f : -1.f;
+
+    leftY = signY * pow(abs(leftY), arcadePower) / pow(10, arcadePower);
+    rightX = signX * pow(abs(rightX), arcadePower) / pow(10, arcadePower);
+
+    leftDrive.spin(forward, leftY + rightX, percent);
+    rightDrive.spin(forward, leftY - rightX, percent);
 }
 
 

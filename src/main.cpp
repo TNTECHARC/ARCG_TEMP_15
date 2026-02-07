@@ -293,20 +293,15 @@ void bottomOuttakeFunction()
   {
     isBottomOuttakeRunning = true;
     armUp = true;
-    intake.spin(forward, 12, volt);
+    intake.spin(reverse, 12, volt);
     bottomOuttake.setVelocity(100, percent);
     bottomOuttake.spinToPosition(200, degrees, true);
     bottomOuttake.spin(reverse, 12, volt);
     wait(0.9, sec);
     bottomOuttake.stop(hold);
-    //intakeLeft.spin(reverse, 0, volt);
-    //intakeRight.spin(reverse, 0, volt);
     armUp = false;
     isBottomOuttakeRunning = false;
-
-    // revolverSlots[0][0] = 0;
-    // revolverSlots[0][1] = 0;
-    // revolverSlots[0][2] = 0;
+    intake.stop(hold);
   }
 }
 
@@ -375,6 +370,15 @@ void moveIntake()
   {
     intake.spin(forward, 12, volt);
   }
+}
+
+
+void matchLoad() {
+  matchLoader.set(true);
+  moveIntake();
+  wait(1.5, sec);
+  intake.stop(hold);
+  matchLoader.set(false);
 }
 
 
@@ -527,7 +531,7 @@ void usercontrol()
   Controller1.ButtonR2.pressed(bottomOuttakeFunction);
 
   Controller1.ButtonL1.pressed(moveIntake);
-  Controller1.ButtonL2.pressed(moveIntake);
+  Controller1.ButtonL2.pressed(moveIntake); // Change to {matchLoad} Function once Match Loader added
 
   Controller1.ButtonLeft.pressed(FixGeneva);
 
@@ -660,7 +664,7 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right)
     std::cout << inertial1.heading() << std::endl;   
     wait(0.2, sec);
     moveIntake();
-    chassis.driveDistance(15, minVoltage, 12.0, false);
+    chassis.driveDistance(16, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(1.5, sec); // Adjust time as needed for OPTIMAL LOADING once consistent
   
@@ -671,14 +675,21 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right)
     chassis.turn(180, 9.0);
     std::cout << inertial1.heading() << std::endl;
     wait(0.1, sec);
-    chassis.driveDistance(85, minVoltage, 12.0, false);
+    chassis.driveDistance(84, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
-    chassis.turn(3, 9.0);
-    chassis.driveDistance(18, minVoltage, 12.0, false);
+    chassis.turn(-4, 9.0);
+    chassis.driveDistance(20, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     moveSlot();
     wait(1, sec);
+
+/* Discuss Auton. Strat. && Route::
+      -- Drive && Store BLUE Side Blocks                    {Store Strat. - Side Priority}
+      -- Drive && Store CENTER Blocks                       {Store Strat. - Center Priority}
+      -- Score in Long Goal (Left)                          {Aggro // Score Strat.}
+      -- Drive && Help Secure Long Goal (Right) w/ 24 Inch  {Shield && Sword Strat.}
+*/
 
 // Score in Long Goal (Left)
     moveSlot();
@@ -692,10 +703,10 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right)
     chassis.driveDistance(13, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
-    chassis.driveDistance(-5, minVoltage, 12.0, false);
+    chassis.driveDistance(-6, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     rise();
-    chassis.driveDistance(5, minVoltage, 9.0, false);
+    chassis.driveDistance(4.5, minVoltage, 9.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     outTake(); // Changed from outTake() to outTakeAll() to SCORE && AUTO-ROTATE
     outTake();
@@ -737,7 +748,7 @@ void AutonSkills_Left() { // Strategy: AUTON SKILLS (Left)
     wait(2, sec); // Adjust time as needed for OPTIMAL LOADING once consistent
 
 // Reverse && Drive to Loader (Right)
-    chassis.driveDistance(-20, minVoltage, 12.0, false);
+    chassis.driveDistance(-35, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
     chassis.turn(-90, 9.0);
@@ -751,11 +762,13 @@ void AutonSkills_Left() { // Strategy: AUTON SKILLS (Left)
     wait(0.1, sec);
 
 // Intake && Store Blocks from Loader (Again)
-    chassis.driveDistance(20, minVoltage, 12.0, false);
+    chassis.driveDistance(35, minVoltage, 12.0, false);
     // Match Loader Function
     wait(2, sec); // Adjust time as needed for OPTIMAL LOADING once consistent
 
-// Score in Long Goal (Right)
+// Choices:
+    // 1) Score in Long Goal (Right) 
+    // 2) Block // Score Long Goal (Left) w/ 15 Inch
     chassis.driveDistance(-32, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
