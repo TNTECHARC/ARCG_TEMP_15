@@ -140,11 +140,6 @@ void autonomous()
 {
   isInAuton = true;
 
-  rise();
-  extendo.set(true);
-  wait(0.1, sec);
-  fall();
-  wait(0.25, sec);
   outtake.spin(reverse, 9, volt);
   wait(0.1, sec);
   outtake.stop(hold);
@@ -374,11 +369,11 @@ void moveIntake()
 
 
 void matchLoad() {
-  matchLoader.set(true);
+  matchLoader.set(false);
   moveIntake();
   wait(1.5, sec);
   intake.stop(hold);
-  matchLoader.set(false);
+  matchLoader.set(true);
 }
 
 
@@ -500,7 +495,6 @@ void setBoost() {
 void usercontrol() 
 {
   isInAuton = true;
-  extendo.set(true);
 
   R1.setBrake(coast);
   R2.setBrake(coast);
@@ -531,17 +525,15 @@ void usercontrol()
   Controller1.ButtonR2.pressed(bottomOuttakeFunction);
 
   Controller1.ButtonL1.pressed(moveIntake);
-  Controller1.ButtonL2.pressed(moveIntake); // Change to {matchLoad} Function once Match Loader added
+  Controller1.ButtonL2.pressed(matchLoad); // Change to {matchLoad} Function once Match Loader added
 
   Controller1.ButtonLeft.pressed(FixGeneva);
-
 
   Controller1.ButtonX.pressed(setBoost);
 
   // User control code here, inside the loop
   while (1) 
   {
-    extendo.set(true);
 
     //To stop geneva fixer from spinning when button is released
     if(!Controller1.ButtonLeft.pressing())
@@ -555,14 +547,6 @@ void usercontrol()
         moveSlot();
       }
     }
-
-    // if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && isSlotFull())
-    //   {
-    //     if(armUp == false) {
-    //     moveSlot();
-    //   }
-     // }
-
   
 
     //Automatic Rotation
@@ -578,10 +562,10 @@ void usercontrol()
      //
     if(Controller1.ButtonL2.pressing() && !revolver.isSpinning())
     {
-      matchLoader.set(true);
-    }else
-    {
       matchLoader.set(false);
+    } else
+    {
+      matchLoader.set(true);
       if(!Controller1.ButtonL1.pressing() && !Controller1.ButtonR2.pressing())
       {
         intake.spin(reverse, 0, volt);
