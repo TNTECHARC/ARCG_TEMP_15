@@ -35,27 +35,6 @@ void outTake();
 void rotateRevolver();
 void usercontrol();
 
-  bool armUp = false;
-
-  //Used for color sort
-  // const int blueTeam = 1;
-  // const int redTeam = 2;
-  int teamColor = 1;
-
-//////////////////////////////////////////////////////////////////////
-
-///////////////////////// Prototypes /////////////////////////////////
-void toggleDriveSpeed();
-void SetSlot();
-bool TopSlotMajorityEnemy(int);
-void transferArrayInfo();
-void AutonSkills_Left();
-void rise();
-void fall();
-void outTake();
-void rotateRevolver();
-void usercontrol();
-
 bool armUp = false;
 bool isBottomOuttakeRunning = false;
 int lastPressed = 0;
@@ -165,11 +144,13 @@ void preAuton()
 }
 
 //Rise!!
+bool isRaised = false;
 void rise() {
 
   liftL.set(true);
   wait(10, msec);
   liftR.set(true);
+  isRaised = true;
 }
 
 //Fall!
@@ -177,6 +158,7 @@ void fall() {
 
   liftL.set(false);
   liftR.set(false);
+  isRaised = false;
 }
 
 //Outtake function   ********HAVE SOMEONE LOOK AT HOW COLOR SORT MODIFIED THIS*********
@@ -303,7 +285,7 @@ void matchLoad() {
 /******************************************************************
  * Function: FixGeneva()
  * Purpose: Reverse Rotate Geneva while button is pressed
-*****************************************************************/
+******************************************************************/
 void FixGeneva() 
 {
   if(!revolver.isSpinning())
@@ -377,11 +359,23 @@ void usercontrol()
   middleColorSensor.setLight(ledState::on);
   frontColorSensor.setLight(ledState::on);
 
-  Controller1.ButtonR1.pressed(outTake);
-  Controller1.ButtonR2.pressed(bottomOuttakeFunction);
+  Controller1.ButtonR1.pressed(moveSlot);
+  Controller1.ButtonR2.pressed(outTake);
 
-  Controller1.ButtonL1.pressed(moveIntake);
-  Controller1.ButtonL2.pressed(matchLoad); // Change to {matchLoad} Function once Match Loader added
+  int holdTimer = 0;
+  if (Controller1.ButtonR1.pressing() && Controller1.ButtonR2.pressing() && holdTimer <= 0)
+  {
+    if (!isRaised) {
+      rise();
+    } else {
+      fall();
+    }
+
+    holdTimer = 60;
+  } 
+
+  Controller1.ButtonL1.pressed(bottomOuttakeFunction);
+  Controller1.ButtonL2.pressed(moveIntake); // Change to {matchLoad} Function once Match Loader added
 
   Controller1.ButtonLeft.pressed(FixGeneva);
 
@@ -396,7 +390,7 @@ void usercontrol()
       revolver.spin(forward, 0, volt);
     }
 
-    if(Controller1.ButtonB.pressing() && !revolver.isSpinning())
+    if(Controller1.ButtonR1.pressing() && !revolver.isSpinning())
     {
       if(armUp == false) {
         moveSlot();
@@ -413,16 +407,16 @@ void usercontrol()
 
 
     // Match Loader Toggle
-    int holdTimer = 0;
-    if (Controller1.ButtonL2.pressing() && !revolver.isSpinning() && holdTimer <= 0)
+    int loadTimer = 0;
+    if (Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing() && !revolver.isSpinning() && loadTimer <= 0)
     {
-      if (!isBottomOuttakeRunning) {
-        isBottomOuttakeRunning = true;
+      if (!isMatchLoading) {
+        isMatchLoading = true;
       } else {
-        isBottomOuttakeRunning = false;
+        isMatchLoading = false;
       }
 
-      int holdTimer = 60;
+      loadTimer = 60;
 
     } else
     {   
@@ -436,6 +430,12 @@ void usercontrol()
       holdTimer--;
     } else {
       holdTimer = 0;
+    }
+
+    if (loadTimer > 0) {
+      loadTimer--;
+    } else {
+      loadTimer = 0;
     }
 
 
