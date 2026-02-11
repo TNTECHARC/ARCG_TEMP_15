@@ -15,9 +15,13 @@ class Drive
     motor_group leftDrive, rightDrive;
     inertial inertialSensor;
 
+<<<<<<< HEAD
     float driveMinVoltage;
     float driveMaxVoltage;
     float turnMinVoltage;
+=======
+    float driveMaxVoltage;
+>>>>>>> 9805ea86439d7a27d95b6c0318b7940ab25928ad
     float turnMaxVoltage;
 
     float wheelRatio, wheelDiameter;
@@ -57,6 +61,7 @@ class Drive
     void brake(bool left, bool right, brakeType);
 
     void driveDistance(float distance);
+<<<<<<< HEAD
     void driveDistance(float distance, float minVoltage, float maxVoltage, bool precedence);
     void driveDistanceWithOdom(float distance);
 
@@ -68,6 +73,11 @@ class Drive
 
 
 
+=======
+    void driveDistance(float distance, float maxVoltage);
+    void driveDistanceWithOdom(float distance);
+
+>>>>>>> 9805ea86439d7a27d95b6c0318b7940ab25928ad
     void setMaxVoltage(float volts);
     float getMaxVoltage();
 
@@ -75,7 +85,11 @@ class Drive
     void turn(float turnDegrees, float maxVoltage);
 
     void turnToAngle(float angle);
+<<<<<<< HEAD
     void turnToAngle(float angle, float minVoltage,float maxVoltage, bool precedence);
+=======
+    void turnToAngle(float angle, float maxVoltage);
+>>>>>>> 9805ea86439d7a27d95b6c0318b7940ab25928ad
 
     void moveToPosition(float, float);
     void turnToPosition(float desX, float desY);

@@ -8,6 +8,7 @@
 /// @param wheelRatio   
 /// @param max_voltage The maximum amount of the voltage used in the drivebase (1 - 12)
 Drive::Drive(motor_group leftDrive, motor_group rightDrive, int inertialPORT, float wheelDiameter, float wheelRatio, float maxVoltage, int odomType, float odomWheelDiameter, float odomPod1Offset, float odomPod2Offset ) : 
+Drive::Drive(motor_group leftDrive, motor_group rightDrive, int inertialPORT, float wheelDiameter, float wheelRatio, float maxVoltage, int odomType, float odomWheelDiameter, float odomPod1Offset, float odomPod2Offset ) : 
 leftDrive(leftDrive), 
 rightDrive(rightDrive),
 inertialSensor(inertial(inertialPORT))
@@ -21,7 +22,32 @@ inertialSensor(inertial(inertialPORT))
     this->odomType = odomType;
 
     // this->chassisOdometry = Odom(2, -1.0, -1.0);
+    // this->chassisOdometry = Odom(2, -1.0, -1.0);
 
+    switch(odomType){
+        case NO_ODOM:
+            this->chassisOdometry = Odom(wheelDiameter, wheelDiameter, 0, odomPod1Offset, odomPod2Offset, 0);
+            break;
+        case HORIZONTAL_AND_VERTICAL:
+            this->chassisOdometry = Odom(odomWheelDiameter, odomWheelDiameter, odomPod1Offset, odomPod2Offset);
+            break;
+        case TWO_VERTICAL:
+            // Not yet implemented
+            break;
+        case TWO_AT_45:
+            this->chassisOdometry = Odom(odomWheelDiameter, odomPod1Offset, odomPod2Offset);
+            break;
+    }
+}
+
+void Drive::setDriveMaxVoltage(float maxVoltage)
+{
+    driveMaxVoltage = maxVoltage;
+}
+
+void Drive::setTurnMaxVoltage(float maxVoltage)
+{
+    turnMaxVoltage = maxVoltage;
     switch(odomType){
         case NO_ODOM:
             this->chassisOdometry = Odom(wheelDiameter, wheelDiameter, 0, odomPod1Offset, odomPod2Offset, 0);
@@ -550,6 +576,8 @@ void Drive::bezierTurn(float curX, float curY, float midX, float midY, float des
         nextX = (pow(1-pts[i], 2)*curX) + (2*(1-pts[i])*pts[i]*midX) + (pow(pts[i], 2)*desX);
         nextY = (pow(1-pts[i], 2)*curY) + (2*(1-pts[i])*pts[i]*midY) + (pow(pts[i], 2)*desY);  
         moveToPosition(nextX, nextY);
+        std::cout << i << std::endl;
+        std::cout << nextX << ", " << nextY << std::endl;
     }
 
     delete [] pts;
