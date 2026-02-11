@@ -160,11 +160,13 @@ void fall() {
 
 //Outtake function   ********HAVE SOMEONE LOOK AT HOW COLOR SORT MODIFIED THIS*********
 void outTake() {
-  if (!revolver.isSpinning()) {
+  if (!revolver.isSpinning()) 
+  {
     armUp = true;
+    outtake.stop(coast);
 
-    outtake.setVelocity(50, percent);
-    outtake.spinToPosition(90, degrees, true);
+    outtake.setVelocity(100, percent);
+    outtake.spinToPosition(200, degrees, true);
     // outtake.spinToPosition(0, degrees, false);
     outtake.spinFor(reverse, 1, sec);
     outtake.stop(hold);
@@ -258,17 +260,10 @@ void FixGeneva()
 
 void moveSlot()
 {
-  rotateRevolver();
-}
-
-void rotateRevolver()
-{
-  if(!revolver.isSpinning())
-  {
-    // revolver.setTimeout(0.55, seconds);
-    // revolver.setVelocity(100, percent);
-    // revolver.spinFor(1, rev);
-    // wait(10, sec);
+    outtake.setVelocity(100, percent);
+    outtake.spinFor(reverse, 0.1, sec);
+    outtake.stop(hold);
+    revolver.setBrake(coast);
 
     PID revolverPID(0.66, 0, 2, 10, 100, 2000);
     float desiredPos = 360 + revolver.position(degrees);
@@ -292,8 +287,9 @@ void rotateRevolver()
 
     revolver.spin(forward, 0, volt);
     revolver.setBrake(hold);
-  }
+    outtake.stop(coast);
 }
+
 
 // Check Canister
 bool isSlotFull();

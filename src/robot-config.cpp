@@ -24,8 +24,8 @@ motor L4 = motor(PORT20, ratio6_1, false);
 //System
 motor revolver = motor(PORT10, ratio36_1, false);
 
-motor outtakeLeft = motor(PORT1, ratio18_1, true);
-motor outtakeRight = motor(PORT11, ratio18_1, false);
+motor outtakeLeft = motor(PORT1, ratio6_1, true);
+motor outtakeRight = motor(PORT11, ratio6_1, false);
 motor_group outtake = motor_group(outtakeLeft, outtakeRight);
 
 motor intakeLeft = motor(PORT2, ratio36_1, true);
