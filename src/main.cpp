@@ -227,9 +227,15 @@ void moveIntake()
   }
 }
 
+bool isMatchLoading = false;
 void matchLoad() {
-  matchLoader.set(true);
-  moveIntake();
+  if (!isMatchLoading) {
+    matchLoader.set(true);
+    isMatchLoading = true;
+  } else {
+    matchLoader.set(false);
+    isMatchLoading = false;
+  }
 }
 
 //function to unload all
@@ -407,22 +413,37 @@ void usercontrol()
       }
      }
 
-    if (Controller1.ButtonL2.pressing() && !revolver.isSpinning())
+
+    // Match Loader Toggle
+    int holdTimer = 0;
+    if (Controller1.ButtonL2.pressing() && !revolver.isSpinning() && holdTimer <= 0)
     {
-      matchLoader.set(true);
+      if (!isBottomOuttakeRunning) {
+        isBottomOuttakeRunning = true;
+      } else {
+        isBottomOuttakeRunning = false;
+      }
+
+      int holdTimer = 60;
+
     } else
-    {
-      matchLoader.set(false);
-    
-      if (!Controller1.ButtonL1.pressing() && !Controller1.ButtonR2.pressing())
+    {   
+      if(!Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing() && !Controller1.ButtonR2.pressing())
       {
         intake.spin(reverse, 0, volt);
       }
+    }
+
+    if (holdTimer > 0) {
+      holdTimer--;
+    } else {
+      holdTimer = 0;
+    }
+
 
     chassis.arcade();
     wait(20, msec); // Sleep the task for a short amount of time to
     //Brain.Screen.clearScreen();
-    }
   }
 }
 
