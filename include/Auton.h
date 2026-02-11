@@ -1,3 +1,5 @@
+#pragma once
+
 #include "vex.h"
 #include "screen.h"
 #include "util.h"
@@ -7,6 +9,7 @@
 using namespace vex;
 
 void setDriveTrainConstants();
+void usercontrol();
 void preAuton();
 void Auton_Right1();
 void Auton_Right2();
@@ -22,13 +25,12 @@ void moveSlot();
 void rise();
 void fall();
 void autonomous();
+void rotateRevolver();
 
-bool isInAuton = false;
+extern Drive chassis;
 
-int odomType = NO_ODOM;
-
-float velocity = 12.0;
-bool boost = true;
-
-float minVoltage = 1.4;
+extern bool isInAuton;
+extern float minVoltage;
+extern bool armUp;
+extern bool isBottomOuttakeRunning;
 

@@ -1,125 +1,24 @@
 #include "Auton.h"
 
-Drive chassis
-(
-    motor_group(L1, L2, L3, L4), // Left drive train motors 
-    motor_group(R1, R2, R3, R4), // Right drive train motors
-    PORT8,               // Inertial Sensor Port
-    2.75,              // The diameter size of the wheel in inches
-    1,                   // 
-    velocity,                   // The maximum amount of the voltage used in the drivebase (1 - 12)
-    odomType,
-    1,                  //Odometry wheel diameter (set to zero if no odom) (1.96 robot behind by .2)
-    0,               //Odom pod1 offset 
-    0                //Odom pod2 offset
-);
-
-
-/// @brief Runs before the competition starts
-void preAuton() 
-{
-  setDriveTrainConstants();
-  enum preAutonStates{START_SCREEN = 0, SELECTION_SCREEN = 1};
-  int currentScreen = START_SCREEN;
-  int lastPressed = 0;
-
-  // Calibrates/Resets the Brains sensors before the competition
-  inertial1.calibrate();
-  rotation1.resetPosition();
-  rotation2.resetPosition();
-
-  vex::color colors[8] = {vex::color::red, vex::color::red, vex::color::red, vex::color::red, 
-                          vex::color::blue, vex::color::blue, vex::color::blue, vex::color::blue};
-  std::string names[8] = {"Auton L1", "Auton R1", "Auton L3", "Auton R3", 
-                          "Auton L2", "Auton R2", "Auton L4", "Auton R4"};
-  Button buttons[9];
-  createAutonButtons(colors, names, buttons);
-  buttons[0].setChosen(true);
-
-  Text selectionLabel;
-  Button selectionButton;
-  createPreAutonScreen(selectionButton, selectionLabel);
-  
-  //int lastPressed = 0;
-  int temp;
-
-  Controller1.Screen.print(buttons[lastPressed].getName().c_str());
-
-  while(!isInAuton){
-    showPreAutonScreen(selectionButton, selectionLabel, buttons[lastPressed].getName());
-    while(currentScreen == START_SCREEN){
-      if(Brain.Screen.pressing()){
-        if(checkPreAutonButton(selectionButton)){
-          currentScreen = SELECTION_SCREEN;
-        }
-      }
-      wait(10, msec);
-    }
-
-    showAutonSelectionScreen(buttons);
-    while(currentScreen == SELECTION_SCREEN){
-      if(Brain.Screen.pressing()){
-        temp = checkButtonsPress(buttons);
-        if(temp >= 0 && temp < 8){
-          lastPressed = temp;
-          Controller1.Screen.clearLine();
-          Controller1.Screen.setCursor(1, 1);
-          Controller1.Screen.print(buttons[lastPressed].getName().c_str());
-        }
-      }
-      if(temp == 8)
-        currentScreen = START_SCREEN;
-      wait(10, msec);
-    }
-    wait(10, msec);
-  }
-  Brain.Screen.clearScreen();
-}
-
-/// @brief Sets the PID values for the Chassis
-void setDriveTrainConstants()
-{
-    // Set the Drive PID values for the DriveTrain
-    chassis.setDriveConstants(
-        2.481, // Kp - Proportion Constant
-        0.0, // Ki - Integral Constant
-        10.0, // Kd - Derivative Constant
-        1.0, // Settle Error
-        100, // Time to Settle
-        25000 // End Time
-    );
-
-    // Set the Turn PID values for the DriveTrain
-    chassis.setTurnConstants(
-        0.504,        // Kp - Proportion Constant
-        0.0,         // Ki - Integral Constant
-        4.05,       // Kd - Derivative Constant 
-        2.0,       // Settle Error
-        500,      // Time to Settle
-        25000     // End Time
-    );
-    
-}
-
 /*************************************************************************************/
 
 /// @brief Runs during the Autonomous Section of the Competition
 void autonomous() 
 {
-  isInAuton = true;
+    isInAuton = true;
 
-  rise();
-  extendo.set(true);
-  wait(0.25, sec);
-  fall();
-  wait(0.25, sec);
+    rise();
+    extendo.set(true);
+    wait(0.25, sec);
+    fall();
+    wait(0.25, sec);
 
-  chassis.setPosition(0,0,0);
-  setDriveTrainConstants();
+    chassis.setPosition(0,0,0);
+    setDriveTrainConstants();
 }
 
 
-  
+
 // BREAK - Separate Autonomous Routines into separate Files when possible.
 
 
@@ -146,7 +45,7 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right)
     chassis.driveDistance(16, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(1.5, sec); // Adjust time as needed for OPTIMAL LOADING once consistent
-  
+
 // Reverse && Drive to Side Blocks (Left)   {2 Blue}
     chassis.driveDistance(-12, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
@@ -164,10 +63,10 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right)
     wait(1, sec);
 
 /* Discuss Auton. Strat. && Route::
-      -- Drive && Store BLUE Side Blocks                    {Store Strat. - Side Priority}
-      -- Drive && Store CENTER Blocks                       {Store Strat. - Center Priority}
+    -- Drive && Store BLUE Side Blocks                    {Store Strat. - Side Priority}
+    -- Drive && Store CENTER Blocks                       {Store Strat. - Center Priority}
       -- Score in Long Goal (Left)                          {Aggro // Score Strat.}
-      -- Drive && Help Secure Long Goal (Right) w/ 24 Inch  {Shield && Sword Strat.}
+    -- Drive && Help Secure Long Goal (Right) w/ 24 Inch  {Shield && Sword Strat.}
 */
 
 // Score in Long Goal (Left)
