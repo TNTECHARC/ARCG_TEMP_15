@@ -20,11 +20,9 @@ void Auton_Left3();
 void AutonSkills_Right();
 void AutonSkills_Left();
 void moveIntake();
-void matchLoad();
 void outTake();
 void moveSlot();
-void rise();
-void fall();
+void toggleLift();
 void autonomous();
 void rotateRevolver();
 

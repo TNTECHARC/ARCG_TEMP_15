@@ -2,19 +2,26 @@
 
 /*************************************************************************************/
 
+float minVoltage = 1.4;
+
 /// @brief Runs during the Autonomous Section of the Competition
 void autonomous() 
 {
-    isInAuton = true;
+  isInAuton = true;
 
-    rise();
-    extendo.set(true);
-    wait(0.25, sec);
-    fall();
-    wait(0.25, sec);
+  matchLoader.set(true);
+  extendo.set(true);
+  wait(0.1, sec);
+  matchLoader.set(false);
+  wait(0.25, sec);
+  outtake.spin(reverse, 9, volt);
+  wait(0.1, sec);
+  outtake.stop(hold);
 
-    chassis.setPosition(0,0,0);
-    setDriveTrainConstants();
+  chassis.setPosition(0,0,0);
+  setDriveTrainConstants();
+
+  AutonSkills_Right();
 }
 
 
@@ -32,17 +39,17 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
 
 
 // Origin to Closest RED Loader (3 Red, 3 Blue)         {+ 5}
-    chassis.driveDistance(-24, minVoltage, 12.0, false);
+    chassis.driveDistance(-40, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
-    chassis.turn(-82, 9.0);
+    chassis.turn(-72, 9.0);
     std::cout << inertial1.heading() << std::endl;   
     wait(0.2, sec);
     moveIntake();
-    chassis.driveDistance(15, minVoltage, 12.0, false);
+    chassis.driveDistance(26, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
-    matchLoad();
+    matchLoader.set(true);
     std::cout << "Match Loading" << std::endl;
     chassis.driveDistance(2, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
@@ -78,7 +85,7 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
     wait(0.2, sec);
     chassis.driveDistance(22, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    matchLoad();
+    matchLoader.set(true);
     std::cout << "Match Loading" << std::endl;
     chassis.driveDistance(2, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
@@ -111,13 +118,13 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
     chassis.driveDistance(20, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
-    rise();
+    toggleLift();
     outTake(); // Changed from outTake() to outTakeAll() to SCORE && AUTO-ROTATE
     outTake();
     outTake();
     outTake();
     outTake();
-    fall();
+    toggleLift();
     wait(0.1, sec);
 
 // End and Check Time
@@ -263,10 +270,9 @@ void AutonSkills_Left() { // Strategy: AUTON SKILLS (Left)
     std::cout << inertial1.heading() << std::endl;
     chassis.driveDistance(6.5, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    rise();
+    toggleLift();
     outTake(); // Changed from outTake() to outTakeAll() to SCORE && AUTO-ROTATE
-    fall();
-
+    toggleLift();
     // Test, Tune, Adjust AS NECESSARY
     // IF Acceptable Consistency && Accuracy/Precision >> Add Center && Parking
 
@@ -328,14 +334,14 @@ void Auton_Right1() { // Strategy: Score (Right)
     std::cout << inertial1.heading() << std::endl;
     chassis.driveDistance(16.5, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    rise();
+    toggleLift();
     wait(0.5, sec);
     outTake();
     std::cout << "Scoring in Left Long Goal" << std::endl;
     wait(3, sec);
 
 // Drive to Center Goal
-    fall();
+    toggleLift();
     chassis.driveDistance(-5, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     chassis.turn(-90, 9.0);
@@ -418,12 +424,12 @@ void Auton_Left1() { // Strategy: Score (Left)
     std::cout << inertial1.heading() << std::endl;
     chassis.driveDistance(22, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    rise();
+    toggleLift();
     wait(0.5, sec);
     outTake;
     std::cout << "Scoring in Left Long Goal" << std::endl;
     wait(3, sec);
-    fall();
+    toggleLift();
 
 // Drive to Park Zone & Park
     // chassis.driveDistance(-5, 3.0, 12.0, false);

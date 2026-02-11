@@ -20,34 +20,14 @@ using namespace vex;
   // const int blueTeam = 1;
   // const int redTeam = 2;
   int teamColor = 1;
+  
 
 //////////////////////////////////////////////////////////////////////
 
 ///////////////////////// Prototypes /////////////////////////////////
 void toggleDriveSpeed();
 void SetSlot();
-bool TopSlotMajorityEnemy(int);
-void transferArrayInfo();
-void AutonSkills_Left();
-void rise();
-void fall();
-void outTake();
-void rotateRevolver();
-void usercontrol();
-
-  bool armUp = false;
-
-  //Used for color sort
-  // const int blueTeam = 1;
-  // const int redTeam = 2;
-  int teamColor = 1;
-
-//////////////////////////////////////////////////////////////////////
-
-///////////////////////// Prototypes /////////////////////////////////
-void toggleDriveSpeed();
-void SetSlot();
-bool TopSlotMajorityEnemy(int);
+void TopSlotMajorityEnemy(int);
 void transferArrayInfo();
 void AutonSkills_Left();
 void rise();
@@ -57,10 +37,7 @@ void rotateRevolver();
 void usercontrol();
 
 bool armUp = false;
-bool isBottomOuttakeRunning = false;
-int lastPressed = 0;
 bool isInAuton = false;
-float minVoltage = 1.4;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -103,6 +80,7 @@ void setDriveTrainConstants()
     
 }
 
+/// @brief Runs before the competition starts
 /// @brief Runs before the competition starts
 void preAuton() 
 {
@@ -164,22 +142,13 @@ void preAuton()
   Brain.Screen.clearScreen();
 }
 
-//Rise!!
-void rise() {
-
-  liftL.set(true);
-  wait(10, msec);
-  liftR.set(true);
+void toggleLift()
+{
+  liftL.set(!liftL.value());
+  liftR.set(!liftR.value());
 }
 
-//Fall!
-void fall() {
-
-  liftL.set(false);
-  liftR.set(false);
-}
-
-//Outtake function   ********HAVE SOMEONE LOOK AT HOW COLOR SORT MODIFIED THIS*********
+//Outtake function
 void outTake() {
   if (!revolver.isSpinning()) 
   {
@@ -187,8 +156,7 @@ void outTake() {
     outtake.stop(coast);
 
     outtake.setVelocity(100, percent);
-    outtake.spinToPosition(200, degrees, true);
-    // outtake.spinToPosition(0, degrees, false);
+    outtake.spinToPosition(165, degrees, true);
     outtake.spinFor(reverse, 1, sec);
     outtake.stop(hold);
     armUp = false;
@@ -196,6 +164,7 @@ void outTake() {
   }
 }
 
+bool isBottomOuttakeRunning = false;
 void bottomOuttakeFunction()
 {
   if(!revolver.isSpinning())
@@ -204,18 +173,11 @@ void bottomOuttakeFunction()
     armUp = true;
     intake.spin(reverse, 12, volt);
     bottomOuttake.setVelocity(100, percent);
-    bottomOuttake.spinToPosition(180, degrees, true);
-    bottomOuttake.spin(reverse, 12, volt);
-    wait(0.8, sec);
-    bottomOuttake.stop(hold);
-    //intakeLeft.spin(reverse, 0, volt);
-    //intakeRight.spin(reverse, 0, volt);
+    bottomOuttake.spinToPosition(210, degrees, true);
+    wait(0.1, sec);
+    bottomOuttake.spinToPosition(0, degrees, true);
     armUp = false;
     isBottomOuttakeRunning = false;
-
-    // revolverSlots[0][0] = 0;
-    // revolverSlots[0][1] = 0;
-    // revolverSlots[0][2] = 0;
   }
 }
 
@@ -227,16 +189,6 @@ void moveIntake()
   }
 }
 
-bool isMatchLoading = false;
-void matchLoad() {
-  if (!isMatchLoading) {
-    matchLoader.set(true);
-    isMatchLoading = true;
-  } else {
-    matchLoader.set(false);
-    isMatchLoading = false;
-  }
-}
 
 //function to unload all
 void unloadAll() {
@@ -268,35 +220,6 @@ bool isSlotFull()
     }
   else 
     return false;
-}
-
-
-// // Check Revolver
-// bool isBottomSlotFilled()
-// {
-//   if(revolverSlots[0][0] != 0 || revolverSlots[0][1] != 0 || revolverSlots[0][2] != 0)
-//     return true;
-//   else
-//     return false;
-// }
-
-
-
-void moveIntake()
-{
-  if(!revolver.isSpinning())
-  {
-    intake.spin(forward, 12, volt);
-  }
-}
-
-
-void matchLoad() {
-  matchLoader.set(false);
-  moveIntake();
-  wait(1.5, sec);
-  intake.stop(hold);
-  matchLoader.set(true);
 }
 
 
@@ -361,6 +284,8 @@ void usercontrol()
   L3.setBrake(coast);
   L4.setBrake(coast);
 
+  extendo.set(true);
+
   outtake.spin(reverse, 9, volt);
   wait(0.1, sec);
   outtake.spin(reverse, 0, volt);
@@ -371,8 +296,6 @@ void usercontrol()
   //Team select function - note: this changes depending on the slot
   //teamColorSelect(teamColor); // Team selected
 
-  Controller1.ButtonUp.pressed(rise);
-  Controller1.ButtonDown.pressed(fall);
   backColorSensor.setLight(ledState::on);
   middleColorSensor.setLight(ledState::on);
   frontColorSensor.setLight(ledState::on);
@@ -381,9 +304,11 @@ void usercontrol()
   Controller1.ButtonR2.pressed(bottomOuttakeFunction);
 
   Controller1.ButtonL1.pressed(moveIntake);
-  Controller1.ButtonL2.pressed(matchLoad); // Change to {matchLoad} Function once Match Loader added
 
   Controller1.ButtonLeft.pressed(FixGeneva);
+
+  bool liftToggle = false;
+  bool matchLoadToggle = false;
 
 
   // User control code here, inside the loop
@@ -398,7 +323,7 @@ void usercontrol()
 
     if(Controller1.ButtonB.pressing() && !revolver.isSpinning())
     {
-      if(armUp == false) {
+      if(!armUp) {
         moveSlot();
       }
     }
@@ -406,38 +331,38 @@ void usercontrol()
     //Automatic Rotation
     if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && isSlotFull())
       {
-        if (armUp == false) {
+        if (!armUp) {
         moveSlot();
       }
      }
 
-
-    // Match Loader Toggle
-    int holdTimer = 0;
-    if (Controller1.ButtonL2.pressing() && !revolver.isSpinning() && holdTimer <= 0)
+    // Rise / Fall Toggle
+    
+    if (Controller1.ButtonRight.pressing() && !liftToggle) {
+      toggleLift();
+      liftToggle = true;
+    }
+    else if(!Controller1.ButtonRight.pressing() && liftToggle)
     {
-      if (!isBottomOuttakeRunning) {
-        isBottomOuttakeRunning = true;
-      } else {
-        isBottomOuttakeRunning = false;
-      }
-
-      int holdTimer = 60;
-
-    } else
-    {   
-      if(!Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing() && !Controller1.ButtonR2.pressing())
-      {
-        intake.spin(reverse, 0, volt);
-      }
+      liftToggle = false;
     }
 
-    if (holdTimer > 0) {
-      holdTimer--;
-    } else {
-      holdTimer = 0;
+    if(Controller1.ButtonL2.pressing() && !matchLoadToggle)
+    {
+      matchLoader.set(!matchLoader.value());
+      matchLoadToggle = true;
+    }
+    else if(!Controller1.ButtonL2.pressing() && matchLoadToggle)
+    {
+      matchLoadToggle = false;
     }
 
+
+
+    if(!Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing() && !Controller1.ButtonR2.pressing())
+    {
+      intake.spin(reverse, 0, volt);
+    }
 
     chassis.arcade();
     wait(20, msec); // Sleep the task for a short amount of time to
