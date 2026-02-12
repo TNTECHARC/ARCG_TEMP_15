@@ -30,8 +30,6 @@ void SetSlot();
 void TopSlotMajorityEnemy(int);
 void transferArrayInfo();
 void AutonSkills_Left();
-void rise();
-void fall();
 void outTake();
 void rotateRevolver();
 void usercontrol();
@@ -156,11 +154,10 @@ void outTake() {
     outtake.stop(coast);
 
     outtake.setVelocity(100, percent);
-    outtake.spinToPosition(165, degrees, true);
+    outtake.spinToPosition(180, degrees, true);
     outtake.spinFor(reverse, 1, sec);
     outtake.stop(hold);
     armUp = false;
-    moveSlot();
   }
 }
 
