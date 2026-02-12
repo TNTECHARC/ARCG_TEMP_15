@@ -35,17 +35,19 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
     std::cout << "Starting Heading:   " << inertial1.heading() << std::endl;
 
 
-// Origin to Closest RED Loader (3 Red, 3 Blue)         {+ 5}
-    chassis.driveDistance(-30.5, minVoltage, 12.0, false);
+// Origin to Closest RED Loader (3 Red, 3 Blue)       {+ 5}
+    chassis.driveDistance(-30, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.2, sec);
     chassis.turn(-78.5, 9.0);
     std::cout << inertial1.heading() << std::endl;   
     wait(0.1, sec);
     moveIntake();
-    matchLoader.set(true);
     wait(0.25, sec);
-    chassis.driveDistance(13.5, minVoltage, 12.0, false);
+    chassis.driveDistance(6, minVoltage, 12.0, false);
+    std::cout << chassis.getCurrentMotorPosition() << std::endl;
+    matchLoader.set(true);
+    chassis.driveDistance(8, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
     std::cout << "Match Loading" << std::endl;
@@ -56,19 +58,19 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
     matchLoader.set(false);
 
 // Loader to Closest RED Side Blocks (2 Blue)
-    chassis.driveDistance(-14, minVoltage, 12.0, false); 
+    chassis.driveDistance(-13, minVoltage, 12.0, false); 
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.1, sec);
+    wait(0.2, sec);
     chassis.turn(-90, 9.0);
     std::cout << inertial1.heading() << std::endl;
     wait(0.2, sec);
-    chassis.driveDistance(18, minVoltage, 12.0, false);
+    chassis.driveDistance(16.5, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.75, sec);
     moveSlot();
 
-// Side to Closest BLUE Loader (2 Red)              {+ 5}
-    chassis.driveDistance(-8, minVoltage, 12.0, false);
+// BLUE Side Blocks (2 Red)
+    chassis.driveDistance(-9, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
     chassis.turn(-90, 9.0);
@@ -80,44 +82,51 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
     chassis.turn(90, 9.0);
     std::cout << inertial1.heading() << std::endl;
     wait(0.2, sec);
-    chassis.driveDistance(8, minVoltage, 12.0, false);
+    chassis.driveDistance(10, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.2, sec);
     moveSlot();
 
-// Closest BLUE Loader     (3 Blue, 3 Red)          {+ 5}
-    chassis.driveDistance(-12, minVoltage, 12.0, false);
+// Closest BLUE Loader     (3 Blue, 3 Red)            {+ 5}
+    chassis.driveDistance(-18, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
     chassis.turn(-90, 9.0);
     std::cout << inertial1.heading() << std::endl;
     wait(0.2, sec);
     matchLoader.set(true);
-    chassis.driveDistance(8, minVoltage, 12.0, false);
+    chassis.driveDistance(16, minVoltage, 12.0, false);
     std::cout << "Match Loading" << std::endl;
-    wait(0.5, sec);
+    wait(1.5, sec);
     moveSlot();
-    wait(0.5, sec);
+    wait(1.5, sec);
     moveSlot();
 
-// Score Closest LONG GOAL (Right)         {+ 20}
+// Score Closest LONG GOAL (Right)                    {+ 20}
     wait(0.25, sec);
-    chassis.driveDistance(-24, minVoltage, 12.0, false); 
+    chassis.driveDistance(-28, minVoltage, 12.0, false); 
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.15, sec);
     chassis.turn(180, 9.0);
     std::cout << inertial1.heading() << std::endl;
     wait(0.2, sec);
-    chassis.driveDistance(8, minVoltage, 12.0, false);
+    chassis.driveDistance(6, minVoltage, 9.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
-    wait(0.15, sec);
+    wait(0.25, sec);
     toggleLift();
     outTake();
+    moveSlot();
     outTake();
+    moveSlot();
     outTake();
+    moveSlot();
     outTake();
+    moveSlot();
     outTake();
-
+    moveSlot();
+    outTake();
+    toggleLift();
+    wait(0.25, sec);
 
 
 // Score Closest LONG GOAL (Right)          {+ 20}
@@ -130,20 +139,7 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
     chassis.driveDistance(20, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
-    toggleLift();
-    outTake();
-    moveSlot();
-    outTake();
-    moveSlot();
-    outTake();
-    moveSlot();
-    outTake();
-    moveSlot();
-    outTake();
-    moveSlot();
-    outTake();
-    toggleLift();
-    wait(0.25, sec);
+    
 
 // End and Check Time
 
