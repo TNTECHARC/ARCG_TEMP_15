@@ -153,7 +153,7 @@ void outTake() {
     outtake.stop(coast);
 
     outtake.setVelocity(100, percent);
-    outtake.spinToPosition(210, degrees, true);
+    outtake.spinToPosition(175, degrees, true);
     wait(0.15, sec);
     outtake.spinToPosition(0, degrees, false);
     armUp = false;
@@ -209,11 +209,11 @@ bool isSlotFull()
   //AND "MiddleSensor is red or blue"
   //AND "BackSensor is red or blue"
   //Then return that Slot is full (true)
-  if((((frontColorSensor.hue() <= 20 && frontColorSensor.hue() >= 0)) ||
+  if((((frontColorSensor.hue() <= 20 && frontColorSensor.hue() >= 340)) ||
     ((frontColorSensor.hue() <= 170 && frontColorSensor.hue() >= 200))) &&
-    (((middleColorSensor.hue() <= 20 && middleColorSensor.hue() >= 0)) ||
+    (((middleColorSensor.hue() <= 20 && middleColorSensor.hue() >= 340)) ||
     ((middleColorSensor.hue() <= 170 && middleColorSensor.hue() >= 200))) &&
-    (((backColorSensor.hue() <= 20 && backColorSensor.hue() >= 0)) || 
+    (((backColorSensor.hue() <= 20 && backColorSensor.hue() >= 340)) || 
     ((backColorSensor.hue() <= 170 && backColorSensor.hue() >= 200))))
     {
       Brain.Screen.setCursor(1,1);
@@ -247,7 +247,6 @@ void moveSlot()
 
     PID revolverPID(0.66, 0, 2, 10, 100, 2000);
     float desiredPos = 360 + revolver.position(degrees);
-
     while(!revolverPID.isSettled())
     {
       Brain.Screen.setCursor(1,1);
@@ -268,6 +267,15 @@ void moveSlot()
     revolver.spin(forward, 0, volt);
     revolver.setBrake(hold);
     outtake.stop(coast);
+}
+
+void userControlsThread()
+{
+  while(true)
+  {
+    chassis.arcade();
+    wait(20, msec); 
+  }
 }
 
 
@@ -309,6 +317,8 @@ void usercontrol()
 
   Controller1.ButtonLeft.pressed(FixGeneva);
 
+  thread userThread = thread(userControlsThread);
+
   bool liftToggle = false;
   bool matchLoadToggle = false;
 
@@ -322,7 +332,7 @@ void usercontrol()
       revolver.spin(forward, 0, volt);
     }
 
-    if(Controller1.ButtonB.pressing() && !revolver.isSpinning())
+    if(Controller1.ButtonR1.pressing() && !revolver.isSpinning())
     {
       if(!armUp) {
         moveSlot();
@@ -347,16 +357,17 @@ void usercontrol()
       liftToggle = false;
     } 
 
+    if (Controller1.ButtonDown.pressing() && !matchLoadToggle) {
+      matchLoader.set(!matchLoader.value());
+      matchLoadToggle = true;;
+    } else if (!Controller1.ButtonDown.pressing() && matchLoadToggle) {
+      matchLoadToggle = false;
+    }
+
     if ((Controller1.ButtonL2.pressing())) {
       moveIntake();
 
-      if (Controller1.ButtonL1.pressing() && !matchLoadToggle) {
-        matchLoader.set(!matchLoader.value());
-        matchLoadToggle = true;;
-      } else if (!Controller1.ButtonL1.pressing() && matchLoadToggle) {
-        matchLoadToggle = false;
-      }
-    } else if (Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing()) {
+    }  else if (Controller1.ButtonL1.pressing()) {
         bottomOuttakeFunction();
     }
 
@@ -365,7 +376,6 @@ void usercontrol()
       intake.spin(reverse, 0, volt);
     }
 
-    chassis.arcade();
     wait(20, msec); // Sleep the task for a short amount of time to
     //Brain.Screen.clearScreen();
   }
