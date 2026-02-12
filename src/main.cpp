@@ -154,7 +154,7 @@ void outTake() {
     outtake.stop(coast);
 
     outtake.setVelocity(100, percent);
-    outtake.spinToPosition(180, degrees, true);
+    outtake.spinToPosition(190, degrees, true);
     outtake.spinFor(reverse, 1, sec);
     outtake.stop(hold);
     armUp = false;

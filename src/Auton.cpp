@@ -9,10 +9,8 @@ void autonomous()
 {
   isInAuton = true;
 
-  matchLoader.set(true);
   extendo.set(true);
   wait(0.25, sec);
-  matchLoader.set(false);
   outtake.spin(reverse, 9, volt);
   wait(0.1, sec);
   outtake.stop(hold);
@@ -38,14 +36,15 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
 
 
 // Origin to Closest RED Loader (3 Red, 3 Blue)         {+ 5}
-    chassis.driveDistance(-32, minVoltage, 12.0, false);
+    chassis.driveDistance(-30.5, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.2, sec);
-    chassis.turn(-80, 9.0);
+    chassis.turn(-78.5, 9.0);
     std::cout << inertial1.heading() << std::endl;   
-    wait(0.2, sec);
+    wait(0.1, sec);
     moveIntake();
     matchLoader.set(true);
+    wait(0.25, sec);
     chassis.driveDistance(13.5, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
