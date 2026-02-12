@@ -357,10 +357,13 @@ void usercontrol()
       liftToggle = false;
     } 
 
-    if (Controller1.ButtonDown.pressing() && !matchLoadToggle) {
+    if(Controller1.ButtonDown.pressing() && !matchLoadToggle)
+    {
       matchLoader.set(!matchLoader.value());
-      matchLoadToggle = true;;
-    } else if (!Controller1.ButtonDown.pressing() && matchLoadToggle) {
+      matchLoadToggle = true;
+    }
+    else if(!Controller1.ButtonDown.pressing() && matchLoadToggle)
+    {
       matchLoadToggle = false;
     }
 
