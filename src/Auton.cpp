@@ -145,6 +145,10 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
 
 /*****
 // Store Center Blocks && Score Center (Lower ??)
+    // If Center Score:
+        - White (15 inch) >> Lower Goal
+        - Black (24 inch) >> Upper Goal
+        
     chassis.driveDistance(-8, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
