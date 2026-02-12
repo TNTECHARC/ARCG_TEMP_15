@@ -152,10 +152,9 @@ void outTake() {
   {
     armUp = true;
     outtake.stop(coast);
-
     outtake.setVelocity(100, percent);
-    outtake.spinToPosition(190, degrees, true);
-    outtake.spinFor(reverse, 1, sec);
+    outtake.spinToPosition(160, degrees, true);
+    outtake.spinFor(reverse, 0.75, sec);
     outtake.stop(hold);
     armUp = false;
   }
@@ -170,7 +169,7 @@ void bottomOuttakeFunction()
     armUp = true;
     intake.spin(reverse, 12, volt);
     bottomOuttake.setVelocity(100, percent);
-    bottomOuttake.spinToPosition(210, degrees, true);
+    bottomOuttake.spinToPosition(160, degrees, true);
     wait(0.1, sec);
     bottomOuttake.spinToPosition(0, degrees, true);
     armUp = false;
