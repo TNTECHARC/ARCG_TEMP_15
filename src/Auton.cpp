@@ -41,7 +41,7 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
     chassis.driveDistance(-32, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.2, sec);
-    chassis.turn(-78, 9.0);
+    chassis.turn(-80, 9.0);
     std::cout << inertial1.heading() << std::endl;   
     wait(0.2, sec);
     moveIntake();
