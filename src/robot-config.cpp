@@ -42,7 +42,6 @@ rotation rotation2 = rotation(PORT2);
 //////////// Inertial Sensors ////////////
 
 inertial inertial1 = inertial(PORT8);
-
 /////////////////////////////////////////
 
 led liftR = led(Brain.ThreeWirePort.A);
@@ -56,4 +55,4 @@ optical backColorSensor = optical(PORT7);
 optical middleColorSensor = optical(PORT6);
 optical frontColorSensor = optical(PORT16);
 
-motor bottomOuttake = motor(PORT3, ratio18_1, false);
+motor bottomOuttake = motor(PORT3, ratio36_1, false);

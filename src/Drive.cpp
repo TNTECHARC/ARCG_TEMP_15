@@ -85,20 +85,21 @@ void Drive::setTurnConstants(float Kp, float Ki, float Kd, float settleError, fl
 
 void Drive::arcade()
 {
-    int leftY = 0;
-    int rightX = 0;
-    int arcadePower = 2;
-    if (Controller1.Axis3.position(percent) >= 0)
-        leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(pow(10, arcadePower));
-    else                                                                                                                                                                                                                                                                                                                                                                                                                  
-        leftY = pow(Controller1.Axis3.position(percent), arcadePower)/ -1 *(pow(10, arcadePower));
-    if (Controller1.Axis1.position(percent) >= 0)
-        rightX = pow(Controller1.Axis1.position(percent), arcadePower)/(pow(10, arcadePower));
-    else
-        rightX = pow(Controller1.Axis1.position(percent), arcadePower)/ -1 * (pow(10, arcadePower));
+    int leftY = Controller1.Axis3.position(percent);
+    int rightX = Controller1.Axis1.position(percent);
 
-    leftDrive.spin(forward, leftY+rightX, percent);
-    rightDrive.spin(forward, leftY-rightX, percent);
+    if (abs(leftY) < arcadeDeadzone) { leftY = 0; }
+
+    if (abs(rightX) < arcadeDeadzone) { rightX = 0; }
+
+    float signY = (leftY > 0) ? 1.0f : -1.0f;
+    float signX = (rightX > 0) ? 1.0f : -1.0f;
+
+    leftY = signY * pow(abs(leftY), arcadePower) / pow(10, arcadePower);
+    rightX = signX * pow(abs(rightX), arcadePower) / pow(10, arcadePower);
+
+    leftDrive.spin(forward, leftY + rightX, percent);
+    rightDrive.spin(forward, leftY - rightX, percent);
 }
 
 

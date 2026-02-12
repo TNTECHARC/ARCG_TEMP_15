@@ -29,17 +29,12 @@ void SetSlot();
 bool TopSlotMajorityEnemy(int);
 void transferArrayInfo();
 void AutonSkills_Left();
-void rise();
-void fall();
 void outTake();
 void rotateRevolver();
 void usercontrol();
 
 bool armUp = false;
-bool isBottomOuttakeRunning = false;
-int lastPressed = 0;
 bool isInAuton = false;
-float minVoltage = 1.4;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -143,25 +138,14 @@ void preAuton()
   Brain.Screen.clearScreen();
 }
 
-//Rise!!
-bool isRaised = false;
-void rise() {
-
-  liftL.set(true);
-  wait(10, msec);
-  liftR.set(true);
-  isRaised = true;
+// Lift Toggle Function
+void toggleLift()
+{
+  liftL.set(!liftL.value());
+  liftR.set(!liftR.value());
 }
 
-//Fall!
-void fall() {
-
-  liftL.set(false);
-  liftR.set(false);
-  isRaised = false;
-}
-
-//Outtake function   ********HAVE SOMEONE LOOK AT HOW COLOR SORT MODIFIED THIS*********
+//Outtake Function   ********HAVE SOMEONE LOOK AT HOW COLOR SORT MODIFIED THIS*********
 void outTake() {
   if (!revolver.isSpinning()) 
   {
@@ -169,15 +153,14 @@ void outTake() {
     outtake.stop(coast);
 
     outtake.setVelocity(100, percent);
-    outtake.spinToPosition(200, degrees, true);
-    // outtake.spinToPosition(0, degrees, false);
-    outtake.spinFor(reverse, 1, sec);
-    outtake.stop(hold);
+    outtake.spinToPosition(210, degrees, true);
+    wait(0.15, sec);
+    outtake.spinToPosition(0, degrees, false);
     armUp = false;
-    moveSlot();
   }
 }
 
+bool isBottomOuttakeRunning = false;
 void bottomOuttakeFunction()
 {
   if(!revolver.isSpinning())
@@ -209,17 +192,6 @@ void moveIntake()
   }
 }
 
-bool isMatchLoading = false;
-void matchLoad() {
-  if (!isMatchLoading) {
-    matchLoader.set(true);
-    isMatchLoading = true;
-  } else {
-    matchLoader.set(false);
-    isMatchLoading = false;
-  }
-}
-
 //function to unload all
 void unloadAll() {
   for(int i = 0; i <6; i++)
@@ -248,38 +220,11 @@ bool isSlotFull()
       Brain.Screen.print("Is Full");
       return true;
     }
-  else 
+  else {
     return false;
-}
-
-
-// // Check Revolver
-// bool isBottomSlotFilled()
-// {
-//   if(revolverSlots[0][0] != 0 || revolverSlots[0][1] != 0 || revolverSlots[0][2] != 0)
-//     return true;
-//   else
-//     return false;
-// }
-
-
-
-void moveIntake()
-{
-  if(!revolver.isSpinning())
-  {
-    intake.spin(forward, 12, volt);
   }
 }
 
-
-void matchLoad() {
-  matchLoader.set(false);
-  moveIntake();
-  wait(1.5, sec);
-  intake.stop(hold);
-  matchLoader.set(true);
-}
 
 
 /******************************************************************
@@ -343,6 +288,8 @@ void usercontrol()
   L3.setBrake(coast);
   L4.setBrake(coast);
 
+  extendo.set(true);
+
   outtake.spin(reverse, 9, volt);
   wait(0.1, sec);
   outtake.spin(reverse, 0, volt);
@@ -353,8 +300,6 @@ void usercontrol()
   //Team select function - note: this changes depending on the slot
   //teamColorSelect(teamColor); // Team selected
 
-  Controller1.ButtonUp.pressed(rise);
-  Controller1.ButtonDown.pressed(fall);
   backColorSensor.setLight(ledState::on);
   middleColorSensor.setLight(ledState::on);
   frontColorSensor.setLight(ledState::on);
@@ -362,37 +307,24 @@ void usercontrol()
   Controller1.ButtonR1.pressed(moveSlot);
   Controller1.ButtonR2.pressed(outTake);
 
-  int holdTimer = 0;
-  if (Controller1.ButtonR1.pressing() && Controller1.ButtonR2.pressing() && holdTimer <= 0)
-  {
-    if (!isRaised) {
-      rise();
-    } else {
-      fall();
-    }
-
-    holdTimer = 60;
-  } 
-
-  Controller1.ButtonL1.pressed(bottomOuttakeFunction);
-  Controller1.ButtonL2.pressed(moveIntake); // Change to {matchLoad} Function once Match Loader added
-
   Controller1.ButtonLeft.pressed(FixGeneva);
+
+  bool liftToggle = false;
+  bool matchLoadToggle = false;
 
 
   // User control code here, inside the loop
   while (1) 
   {
-
     //To stop geneva fixer from spinning when button is released
     if(!Controller1.ButtonLeft.pressing())
     {
       revolver.spin(forward, 0, volt);
     }
 
-    if(Controller1.ButtonR1.pressing() && !revolver.isSpinning())
+    if(Controller1.ButtonB.pressing() && !revolver.isSpinning())
     {
-      if(armUp == false) {
+      if(!armUp) {
         moveSlot();
       }
     }
@@ -400,44 +332,38 @@ void usercontrol()
     //Automatic Rotation
     if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && isSlotFull())
       {
-        if (armUp == false) {
+        if (!armUp) {
         moveSlot();
       }
-     }
+    }
 
-
-    // Match Loader Toggle
-    int loadTimer = 0;
-    if (Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing() && !revolver.isSpinning() && loadTimer <= 0)
+    // Rise / Fall Toggle
+    
+    if (Controller1.ButtonA.pressing()  && !liftToggle) {
+      toggleLift();
+      liftToggle = true;
+    } else if (!Controller1.ButtonA.pressing() && liftToggle)
     {
-      if (!isMatchLoading) {
-        isMatchLoading = true;
-      } else {
-        isMatchLoading = false;
+      liftToggle = false;
+    } 
+
+    if ((Controller1.ButtonL2.pressing())) {
+      moveIntake();
+
+      if (Controller1.ButtonL1.pressing() && !matchLoadToggle) {
+        matchLoader.set(!matchLoader.value());
+        matchLoadToggle = true;;
+      } else if (!Controller1.ButtonL1.pressing() && matchLoadToggle) {
+        matchLoadToggle = false;
       }
-
-      loadTimer = 60;
-
-    } else
-    {   
-      if(!Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing() && !Controller1.ButtonR2.pressing())
-      {
-        intake.spin(reverse, 0, volt);
-      }
+    } else if (Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing()) {
+        bottomOuttakeFunction();
     }
 
-    if (holdTimer > 0) {
-      holdTimer--;
-    } else {
-      holdTimer = 0;
+    if(!Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing() && !Controller1.ButtonR2.pressing())
+    {
+      intake.spin(reverse, 0, volt);
     }
-
-    if (loadTimer > 0) {
-      loadTimer--;
-    } else {
-      loadTimer = 0;
-    }
-
 
     chassis.arcade();
     wait(20, msec); // Sleep the task for a short amount of time to
