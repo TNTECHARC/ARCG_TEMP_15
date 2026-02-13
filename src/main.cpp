@@ -322,11 +322,11 @@ bool isSlotFull()
   //AND "BackSensor is red or blue"
   //Then return that Slot is full (true)
   if((((frontColorSensor.hue() <= 20 && frontColorSensor.hue() >= 0)) ||
-    ((frontColorSensor.hue() <= 170 && frontColorSensor.hue() >= 200))) &&
+    ((frontColorSensor.hue() >= 170 && frontColorSensor.hue() <= 200))) &&
     (((middleColorSensor.hue() <= 20 && middleColorSensor.hue() >= 0)) ||
-    ((middleColorSensor.hue() <= 170 && middleColorSensor.hue() >= 200))) &&
+    ((middleColorSensor.hue() >= 170 && middleColorSensor.hue() <= 200))) &&
     (((backColorSensor.hue() <= 20 && backColorSensor.hue() >= 0)) || 
-    ((backColorSensor.hue() <= 170 && backColorSensor.hue() >= 200))))
+    ((backColorSensor.hue() >= 170 && backColorSensor.hue() <= 200))))
     {
       Brain.Screen.setCursor(1,1);
       Brain.Screen.print("Is Full");
