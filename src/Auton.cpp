@@ -475,7 +475,7 @@ void matchAuton()
     std::cout << inertial1.angle() << std::endl;
     moveIntake();
     matchLoader.set(true);
-    wait(0.75,sec);
+    wait(0.75,sec); // Fix Settling Problems
     chassis.driveDistance(14, minVoltage, 12.0, false);
 
     for(int i = 0; i < 6; i++)
