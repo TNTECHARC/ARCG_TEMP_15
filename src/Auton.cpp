@@ -469,11 +469,10 @@ void Auton_Left3() {
 
 void matchAuton()
 {
-    chassis.driveDistance(-32, minVoltage, 12.0, false);
+    chassis.driveDistance(-31, minVoltage, 12.0, false);
     wait(0.2, sec);
-    chassis.turn(-78.5, 12.0);
+    chassis.turn(-80, 12.0);
     std::cout << inertial1.angle() << std::endl;
-    moveIntake();
     matchLoader.set(true);
     wait(0.75,sec); // Fix Settling Problems
     chassis.driveDistance(14, minVoltage, 12.0, false);
@@ -485,8 +484,9 @@ void matchAuton()
         moveIntake();
         wait(1,sec);
         intake.spin(forward, 0, volt);
+        wait(0.5, sec);
         moveSlot();
-        wait(0.15, sec);
+        wait(0.5, sec);
     }
 
     chassis.driveDistance(-10, minVoltage, 12.0, false);
@@ -501,16 +501,15 @@ void matchAuton()
 
 // Version:: Skip Slot 2 w/ Opponent Blocks (hopefully)
     // unloadAll();
-    outTake();
-    wait(0.1, sec);
-    moveSlot();
-    moveSlot();
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         outTake();
         wait(0.1, sec);
         moveSlot();
     } 
+    moveSlot();
+    outTake();
+    wait(0.1, sec);
 
 
 // Version:: Unload first 3 ALLIANCE Color Blocks

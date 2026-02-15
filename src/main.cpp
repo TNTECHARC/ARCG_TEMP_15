@@ -153,7 +153,7 @@ void outTake() {
     armUp = true;
     outtake.stop(coast);
     outtake.setVelocity(100, percent);
-    outtake.spinToPosition(155, degrees, true);
+    outtake.spinToPosition(100, degrees, true);
     outtake.spinFor(reverse, 0.75, sec);
     outtake.stop(hold);
     armUp = false;
@@ -363,7 +363,7 @@ void usercontrol()
       intake.spin(reverse, 0, volt);
     }
 
-    chassis.arcade();
+    chassis.tank();
     wait(20, msec); // Sleep the task for a short amount of time to
     //Brain.Screen.clearScreen();
   }
