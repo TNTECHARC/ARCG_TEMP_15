@@ -71,8 +71,8 @@ void setDriveTrainConstants()
         0.504,        // Kp - Proportion Constant
         0.0,         // Ki - Integral Constant
         4.05,       // Kd - Derivative Constant 
-        2.0,       // Settle Error
-        500,      // Time to Settle
+        3.0,       // Settle Error
+        200,      // Time to Settle
         25000     // End Time
     );
     
@@ -153,7 +153,7 @@ void outTake() {
     armUp = true;
     outtake.stop(coast);
     outtake.setVelocity(100, percent);
-    outtake.spinToPosition(160, degrees, true);
+    outtake.spinToPosition(155, degrees, true);
     outtake.spinFor(reverse, 0.75, sec);
     outtake.stop(hold);
     armUp = false;
@@ -191,6 +191,7 @@ void unloadAll() {
   for(int i = 0; i <6; i++)
       {
         outTake();
+        moveSlot();
         waitUntil(!revolver.isSpinning());
       }
 }
@@ -204,16 +205,18 @@ bool isSlotFull()
   //AND "BackSensor is red or blue"
   //Then return that Slot is full (true)
   if((((frontColorSensor.hue() <= 20 && frontColorSensor.hue() >= 0)) ||
-    ((frontColorSensor.hue() <= 170 && frontColorSensor.hue() >= 200))) &&
+    ((frontColorSensor.hue() >= 130 && frontColorSensor.hue() <= 240))) &&
     (((middleColorSensor.hue() <= 20 && middleColorSensor.hue() >= 0)) ||
-    ((middleColorSensor.hue() <= 170 && middleColorSensor.hue() >= 200))) &&
+    ((middleColorSensor.hue() >= 130 && middleColorSensor.hue() <= 240))) &&
     (((backColorSensor.hue() <= 20 && backColorSensor.hue() >= 0)) || 
-    ((backColorSensor.hue() <= 170 && backColorSensor.hue() >= 200))))
+    ((backColorSensor.hue() >= 130 && backColorSensor.hue() <= 240))))
     {
       Brain.Screen.setCursor(1,1);
       Brain.Screen.print("Is Full");
       return true;
     }
+  // if(frontColorSensor.isNearObject() && middleColorSensor.isNearObject() && backColorSensor.isNearObject())
+  //   return true;
   else 
     return false;
 }
@@ -330,7 +333,7 @@ void usercontrol()
         if (!armUp) {
         moveSlot();
       }
-     }
+    }
 
     // Rise / Fall Toggle
     

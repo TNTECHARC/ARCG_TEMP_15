@@ -2,23 +2,23 @@
 
 /*************************************************************************************/
 
-float minVoltage = 1.4;
+float minVoltage = 1.42;
 
 /// @brief Runs during the Autonomous Section of the Competition
 void autonomous() 
 {
-  isInAuton = true;
+    isInAuton = true;
 
-  extendo.set(true);
-  wait(0.25, sec);
-  outtake.spin(reverse, 9, volt);
-  wait(0.1, sec);
-  outtake.stop(hold);
+    extendo.set(true);
+    wait(0.25, sec);
+    outtake.spin(reverse, 9, volt);
+    wait(0.1, sec);
+    outtake.stop(hold);
 
-  chassis.setPosition(0,0,0);
-  setDriveTrainConstants();
+    chassis.setPosition(0,0,0);
+    setDriveTrainConstants();
 
-  AutonSkills_Right();
+    matchAuton();
 }
 
 
@@ -40,14 +40,13 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.2, sec);
     chassis.turn(-78.5, 9.0);
-    std::cout << inertial1.heading() << std::endl;   
-    wait(0.1, sec);
+    std::cout << inertial1.heading() << std::endl;  
     moveIntake();
-    wait(0.25, sec);
-    chassis.driveDistance(6, minVoltage, 12.0, false);
+    wait(0.15, sec);
+    chassis.driveDistance(9, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     matchLoader.set(true);
-    chassis.driveDistance(8, minVoltage, 12.0, false);
+    chassis.driveDistance(5, minVoltage, 12.0, false);
     std::cout << chassis.getCurrentMotorPosition() << std::endl;
     wait(0.1, sec);
     std::cout << "Match Loading" << std::endl;
@@ -227,8 +226,8 @@ void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Ri
 // Store Side Blocks IF NECESSARY --- Else: Store in 15 Inch
 
 /* Discuss Auton. Strat. && Route::
-      -- Drive && Store BLUE Side Blocks                    {Store Strat. - Side Priority}
-      -- Drive && Store CENTER Blocks                       {Store Strat. - Center Priority}
+    -- Drive && Store BLUE Side Blocks                    {Store Strat. - Side Priority}
+    -- Drive && Store CENTER Blocks                       {Store Strat. - Center Priority}
       -- Score in Long Goal (Left)                          {Aggro // Score Strat.}
       -- Drive && Help Secure Long Goal (Right) w/ 24 Inch  {Shield && Sword Strat.} */
 }
@@ -466,4 +465,36 @@ void Auton_Left2() {
 /// @brief Auton Left Slot 3 [RED] - Write code for route within this function.
 void Auton_Left3() {
     Brain.Screen.print("EXECUTING: Auton 3 - LEFT");
+}
+
+void matchAuton()
+{
+    chassis.driveDistance(-32, minVoltage, 12.0, false);
+    wait(0.2, sec);
+    chassis.turn(-78.5, 12.0);
+    std::cout << inertial1.angle() << std::endl;
+    moveIntake();
+    matchLoader.set(true);
+    wait(1,sec);
+    chassis.driveDistance(14, minVoltage, 12.0, false);
+
+    for(int i = 0; i < 6; i++)
+    {
+        //waitUntil(isSlotFull());
+        moveIntake();
+        wait(1,sec);
+        intake.spin(forward, 0, volt);
+        moveSlot();
+    }
+
+    chassis.driveDistance(-10, minVoltage, 12.0, false);
+    matchLoader.set(false);
+    intake.spin(forward, 0, volt);
+    wait(0.25, sec);
+    chassis.turn(180);
+
+    chassis.driveDistance(16, minVoltage, 12.0, false);
+    toggleLift();
+    wait(0.5, sec);
+    unloadAll();
 }

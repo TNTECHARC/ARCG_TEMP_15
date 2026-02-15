@@ -104,18 +104,18 @@ void Drive::arcade()
 
 
 void Drive::tank(){
-    int leftY = 0;
-    int rightX = 0;
+    int leftY = Controller1.Axis3.position();
+    int rightX = Controller1.Axis2.position();
     
-    if(Controller1.Axis3.position(percent) >= 0)
-        leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(pow(10, arcadePower));
-    else                                                                                                                                                                                                                                                                                                                                                                                                                          
-        leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(-1 * (pow(10, arcadePower)));
+    // if(Controller1.Axis3.position(percent) >= 0)
+    //     leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(pow(10, arcadePower));
+    // else                                                                                                                                                                                                                                                                                                                                                                                                                          
+    //     leftY = pow(Controller1.Axis3.position(percent), arcadePower)/(-1 * (pow(10, arcadePower)));
     
-    if(Controller1.Axis2.position(percent) >= 0)
-        rightX = pow(Controller1.Axis2.position(percent), arcadePower)/(pow(10, arcadePower));
-    else
-        rightX = pow(Controller1.Axis2.position(percent), arcadePower)/(-1 * (pow(10, arcadePower)));
+    // if(Controller1.Axis2.position(percent) >= 0)
+    //     rightX = pow(Controller1.Axis2.position(percent), arcadePower)/(pow(10, arcadePower));
+    // else
+    //     rightX = pow(Controller1.Axis2.position(percent), arcadePower)/(-1 * (pow(10, arcadePower)));
 
     leftDrive.spin(forward, leftY, percent);
     rightDrive.spin(forward, rightX, percent);

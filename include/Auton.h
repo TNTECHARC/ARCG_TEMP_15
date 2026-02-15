@@ -21,10 +21,13 @@ void AutonSkills_Right();
 void AutonSkills_Left();
 void moveIntake();
 void outTake();
-void moveSlot();
+extern void unloadAll();
+extern void moveSlot();
 void toggleLift();
 void autonomous();
 void rotateRevolver();
+void matchAuton();
+extern bool isSlotFull();
 
 extern Drive chassis;
 
