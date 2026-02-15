@@ -525,8 +525,8 @@ void matchAuton()
 
 
 // RIGHT ROBOT go for [Lower Center] and scores >= 1  Block. {AWP}
-    chassis.driveDistance(-18, minVoltage, 12.0, false);
-    chassis.turn(-45, 12.0);
-    chassis.driveDistance(42, minVoltage, 12.0, false);
-    bottomOuttakeFunction();
+    // chassis.driveDistance(-18, minVoltage, 12.0, false);
+    // chassis.turn(-45, 12.0);
+    // chassis.driveDistance(42, minVoltage, 12.0, false);
+    // bottomOuttakeFunction();
 }

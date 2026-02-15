@@ -1,12 +1,12 @@
 {
 	"extension": {
-		"version": "0.7.2025041600",
+		"version": "0.8.2026020401",
 		"json": 2
 	},
 	"project": {
-		"name": "RED TEAM",
+		"name": "Gold-15_C",
 		"description": "",
-		"creationDate": "Wed, 20 Nov 2024 00:18:19 GMT",
+		"creationDate": "Sun, 15 Feb 2026 03:43:31 GMT",
 		"platform": "V5",
 		"language": "cpp",
 		"slot": 1,
