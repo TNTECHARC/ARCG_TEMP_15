@@ -21,6 +21,7 @@ void AutonSkills_Right();
 void AutonSkills_Left();
 void moveIntake();
 void outTake();
+void bottomOuttakeFunction();
 extern void unloadAll();
 extern void moveSlot();
 void toggleLift();

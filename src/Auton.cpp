@@ -2,7 +2,7 @@
 
 /*************************************************************************************/
 
-float minVoltage = 1.42;
+float minVoltage = 1.45;
 
 /// @brief Runs during the Autonomous Section of the Competition
 void autonomous() 
@@ -22,7 +22,7 @@ void autonomous()
 }
 
 
-// Auton SKILLS Routes
+// Auton SKILLS Routes       >>        Use matchAuton() & Add other matchloads // center // park ???
 /// @brief Auton SKILLS Right [RED] - 15 Inch Robot
 void AutonSkills_Right() { // Strategy: AUTON SKILLS (Right) {MIRROR Skills - Right}
     Brain.Screen.print("EXECUTING: Auton SKILLS - RIGHT");
@@ -480,7 +480,8 @@ void matchAuton()
 
     for(int i = 0; i < 6; i++)
     {
-        //waitUntil(isSlotFull());
+        // waitUntil(isSlotFull());
+        // wait (0.7, sec);
         moveIntake();
         wait(1,sec);
         intake.spin(forward, 0, volt);
@@ -492,13 +493,13 @@ void matchAuton()
     matchLoader.set(false);
     intake.spin(forward, 0, volt);
     wait(0.25, sec);
-    chassis.turn(180);
+    chassis.turn(180, 12.0);
 
     chassis.driveDistance(16, minVoltage, 12.0, false);
     toggleLift();
     wait(0.25, sec);
 
-// Skip Slot 2 w/ Opponent Blocks (hopefully)
+// Version:: Skip Slot 2 w/ Opponent Blocks (hopefully)
     // unloadAll();
     outTake();
     wait(0.1, sec);
@@ -512,4 +513,20 @@ void matchAuton()
     } 
 
 
+// Version:: Unload first 3 ALLIANCE Color Blocks
+    // outTake();
+    // wait(0.1, sec);
+    // moveSlot();
+    // moveSlot();
+    // outTake();
+    // wait(0.1, sec);
+    // moveSlot();
+    // outTake();
+
+
+// RIGHT ROBOT go for [Lower Center] and scores >= 1  Block. {AWP}
+    chassis.driveDistance(-18, minVoltage, 12.0, false);
+    chassis.turn(-45, 12.0);
+    chassis.driveDistance(42, minVoltage, 12.0, false);
+    bottomOuttakeFunction();
 }
