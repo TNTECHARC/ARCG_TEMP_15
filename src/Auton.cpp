@@ -22,7 +22,7 @@ void autonomous()
   chassis.setPosition(0,0,0);
   setDriveTrainConstants();
 
-  AutonSkills_Right();
+  matchAuton();
 }
 
 
@@ -449,4 +449,67 @@ void Auton_Left2() {
 /// @brief Auton Left Slot 3 [RED] - Write code for route within this function.
 void Auton_Left3() {
     Brain.Screen.print("EXECUTING: Auton 3 - LEFT");
+}
+
+void matchAuton()
+{
+    chassis.driveDistance(-31, minVoltage, 12.0, false);
+    wait(0.2, sec);
+    chassis.turn(80, 12.0);
+    std::cout << inertial1.angle() << std::endl;
+    matchLoader.set(true);
+    wait(0.75,sec); // Fix Settling Problems
+    chassis.driveDistance(14, minVoltage, 12.0, false);
+
+    for(int i = 0; i < 6; i++)
+    {
+        // waitUntil(isSlotFull());
+        // wait (0.7, sec);
+        moveIntake();
+        wait(1,sec);
+        intake.spin(forward, 0, volt);
+        wait(0.5, sec);
+        moveSlot();
+        wait(0.5, sec);
+    }
+
+    chassis.driveDistance(-10, minVoltage, 12.0, false);
+    matchLoader.set(false);
+    intake.spin(forward, 0, volt);
+    wait(0.25, sec);
+    chassis.turn(180, 12.0);
+
+    chassis.driveDistance(16, minVoltage, 12.0, false);
+    toggleLift();
+    wait(0.25, sec);
+
+// Version:: Skip Slot 2 w/ Opponent Blocks (hopefully)
+    // unloadAll();
+
+    for (int i = 0; i < 4; i++) {
+        outTake();
+        wait(0.1, sec);
+        moveSlot();
+    } 
+    moveSlot();
+    outTake();
+    wait(0.1, sec);
+
+
+// Version:: Unload first 3 ALLIANCE Color Blocks
+    // outTake();
+    // wait(0.1, sec);
+    // moveSlot();
+    // moveSlot();
+    // outTake();
+    // wait(0.1, sec);
+    // moveSlot();
+    // outTake();
+
+
+// RIGHT ROBOT go for [Lower Center] and scores >= 1  Block. {AWP}
+    // chassis.driveDistance(-18, minVoltage, 12.0, false);
+    // chassis.turn(-45, 12.0);
+    // chassis.driveDistance(42, minVoltage, 12.0, false);
+    // bottomOuttakeFunction();
 }

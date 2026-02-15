@@ -23,6 +23,7 @@ void moveIntake();
 void outTake();
 void moveSlot();
 void toggleLift();
+void matchAuton();
 void autonomous();
 void rotateRevolver();
 
