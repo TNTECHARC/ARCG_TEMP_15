@@ -475,7 +475,7 @@ void matchAuton()
     std::cout << inertial1.angle() << std::endl;
     moveIntake();
     matchLoader.set(true);
-    wait(1,sec);
+    wait(0.75,sec);
     chassis.driveDistance(14, minVoltage, 12.0, false);
 
     for(int i = 0; i < 6; i++)
@@ -485,6 +485,7 @@ void matchAuton()
         wait(1,sec);
         intake.spin(forward, 0, volt);
         moveSlot();
+        wait(0.15, sec);
     }
 
     chassis.driveDistance(-10, minVoltage, 12.0, false);
@@ -495,6 +496,20 @@ void matchAuton()
 
     chassis.driveDistance(16, minVoltage, 12.0, false);
     toggleLift();
-    wait(0.5, sec);
-    unloadAll();
+    wait(0.25, sec);
+
+// Skip Slot 2 w/ Opponent Blocks (hopefully)
+    // unloadAll();
+    outTake();
+    wait(0.1, sec);
+    moveSlot();
+    moveSlot();
+
+    for (int i = 0; i < 3; i++) {
+        outTake();
+        wait(0.1, sec);
+        moveSlot();
+    } 
+
+
 }
