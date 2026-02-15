@@ -204,7 +204,7 @@ void Drive::brake(bool left, bool right, brakeType type)
 /// @param distance The distance to drive in inches
 void Drive::driveDistance(float distance)
 {
-    driveDistance(distance, driveMinVoltage, driveMaxVoltage, false);
+    driveDistance(distance, driveMinVoltage, driveMaxVoltage);
 }
 
 
@@ -213,7 +213,7 @@ void Drive::driveDistance(float distance)
 /// @param minVoltage The min amount of voltage used to drive
 /// @param maxVoltage The max amount of voltage used to drive
 /// @param precedence True: Activates concurrent to other steps; False: Waits
-void Drive::driveDistance(float distance, float minVoltage, float maxVoltage, bool precedence)
+void Drive::driveDistance(float distance, float minVoltage, float maxVoltage)
 {
     // Creates PID objects for linear and angular output
     //float Kp, float Ki, float Kd, float settleError, float timeToSettle, float endTime
@@ -285,8 +285,7 @@ void Drive::turnToAngle(float angle)
 /// @param angle The angle to turn to in degrees (0 - 360)
 /// @param minVoltage The min amount of voltage used to turn
 /// @param maxVoltage The max amount of voltage used to turn
-/// @param precedence True: Activates concurrent to other steps; False: Waits
-void Drive::turnToAngle(float angle, float minVoltage, float maxVoltage, bool precedence)
+void Drive::turnToAngle(float angle, float minVoltage, float maxVoltage)
 {
     updatePosition();
     angle = inTermsOfNegative180To180(angle);
@@ -302,9 +301,39 @@ void Drive::turnToAngle(float angle, float minVoltage, float maxVoltage, bool pr
             output = -1.5;
         driveMotors(-output, output);
         task::sleep(10);
-    }while(!turnPID.isSettled());
+    } while (!turnPID.isSettled());
     brake();
     updatePosition();
+}
+
+/// @brief Turns to an absolute specific angle
+/// @param angle The angle to turn to in degrees (0 - 360)
+/// @param minVoltage The min amount of voltage used to turn
+/// @param maxVoltage The max amount of voltage used to turn
+/// @param settle The time in milliseconds to settle
+void Drive::turnToAngle(float angle, float minVoltage, float maxVoltage, float settle)
+{
+    updatePosition();
+    angle = inTermsOfNegative180To180(angle);
+    PID turnPID(turnKp, turnKi, turnKd, turnSettleError, settle, turnEndTime);
+    do
+    {
+        float error = inTermsOfNegative180To180(inertial1.heading()-angle);
+        float output = turnPID.compute(error);
+        output = clamp(output, -maxVoltage, maxVoltage);
+        if(output > 0 && output < 1.5)
+            output = 1.5;
+        else if(output < 0 && output > -1.5)
+            output = -1.5;
+        driveMotors(-output, output);
+        task::sleep(10);
+    } while (!turnPID.isSettled());
+    brake();
+    updatePosition();
+}
+
+void Drive::turnTime(float turnDegrees, float minVoltage, float maxVoltage, float settle){
+    turnToAngle(turnDegrees + inertial1.heading(), minVoltage, maxVoltage, settle);
 }
 
 /// @brief Turns sharply to a specific location and moves to it
@@ -526,4 +555,52 @@ void Drive::setPosition(float x, float y, float heading){
         default:
             break;
     }
+}
+
+void Drive::driveDistanceTime(float distance, float settle, float minVoltage, float maxVoltage)
+{
+    // Creates PID objects for linear and angular output
+    //float Kp, float Ki, float Kd, float settleError, float timeToSettle, float endTime
+    PID linearPID(driveKp, driveKi, driveKd, driveSettleError, settle, driveEndTime);
+    PID angularPID(turnKp, turnKi, turnKd, turnSettleError, turnTimeToSettle, turnEndTime);
+    
+    updatePosition();
+    // Sets the starting variables for the Position and Heading
+    float startPosition = getCurrentMotorPosition();
+    float startHeading = inertial1.heading();
+
+    // Updates the distance to match the current position of the robot
+    distance += startPosition;
+
+    //  Loops while the linear PID has not yet settled
+    while(!linearPID.isSettled())
+    {
+        updatePosition();
+        // Updates the Error for the linear values and the angular values
+        float linearError = distance - getCurrentMotorPosition();
+        float angularError = degTo180(startHeading - inertial1.heading());
+
+        // Sets the linear output and angular output to the output of the error passed through the PID compute functions
+        float linearOutput = linearPID.compute(linearError);
+        float angularOutput = angularPID.compute(angularError);
+
+        // Clamps the values of the output to fit within the -12 to 12 volt limit of the vex motors
+        linearOutput = clamp(linearOutput, -maxVoltage, maxVoltage);
+        angularOutput = clamp(angularOutput, -maxVoltage, maxVoltage);
+
+        if(linearOutput > 0 && linearOutput < 1)
+            linearOutput = 1;
+        else if(linearOutput < 0 && linearOutput > -1)
+            linearOutput = -1;
+
+        // Drives motors according to the linear Output and includes the linear Output to keep the robot in a straight path relative to is start heading
+        driveMotors(linearOutput + angularOutput, linearOutput - angularOutput);
+        wait(3, msec);
+    }
+
+    
+    // Stops the motors once PID has settled
+    brake();
+    std::cout << "\nsettle\n";
+    updatePosition();
 }

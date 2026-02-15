@@ -28,6 +28,7 @@ void toggleLift();
 void autonomous();
 void rotateRevolver();
 void matchAuton();
+void slot8();
 extern bool isSlotFull();
 
 extern Drive chassis;

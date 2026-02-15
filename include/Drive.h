@@ -57,7 +57,8 @@ class Drive
     void brake(bool left, bool right, brakeType);
 
     void driveDistance(float distance);
-    void driveDistance(float distance, float minVoltage, float maxVoltage, bool precedence);
+    void driveDistanceTime(float distance, float minVoltage, float maxVoltage, float settle);
+    void driveDistance(float distance, float minVoltage, float maxVoltage);
     void driveDistanceWithOdom(float distance);
 
 
@@ -73,9 +74,11 @@ class Drive
 
     void turn(float turnDegrees);
     void turn(float turnDegrees, float maxVoltage);
+    void turnTime(float turnDegrees, float minVoltage, float maxVoltage, float settle);
 
     void turnToAngle(float angle);
-    void turnToAngle(float angle, float minVoltage,float maxVoltage, bool precedence);
+    void turnToAngle(float angle, float minVoltage,float maxVoltage);
+    void turnToAngle(float angle, float minVoltage, float maxVoltage, float settle);
 
     void moveToPosition(float, float);
     void turnToPosition(float desX, float desY);
