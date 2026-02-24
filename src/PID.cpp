@@ -75,9 +75,10 @@ float PID::compute(float error)
 /// @return Returns TRUE if settled, Returns FALSE if not settled
 bool PID::isSettled()
 {
-    if(runTime > endTime && endTime != 0)
+    if(runTime > endTime && endTime != 0){
+        settledTimeout = true;
         return true;
-
+    }
     if(timeSpentSettled > timeToSettle)
         return true;
     else

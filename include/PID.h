@@ -27,4 +27,6 @@ class PID
     bool isSettled();
 
     float getTimeSpentSettled(){return timeSpentSettled;}
+
+    bool settledTimeout;
 };
