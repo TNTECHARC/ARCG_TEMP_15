@@ -6,10 +6,10 @@
 /// @param Kd Derivative
 PID::PID(float Kp, float Ki, float Kd, float settleError)
 {
-    this->Kp = Kp;
-    this->Ki = Ki;
-    this->Kd = Kd;
-    this->settleError = settleError;
+    this -> Kp = Kp;
+    this -> Ki = Ki;
+    this -> Kd = Kd;
+    this -> settleError = settleError;
 }
 
 /// @brief Constructor
@@ -19,11 +19,11 @@ PID::PID(float Kp, float Ki, float Kd, float settleError)
 /// @param timeToSettle The maximum amount of time the system waits to settle after settle point has been reached
 PID::PID(float Kp, float Ki, float Kd, float settleError, float timeToSettle)
 {
-    this->Kp = Kp;
-    this->Ki = Ki;
-    this->Kd = Kd;
-    this->settleError = settleError;
-    this->timeToSettle = timeToSettle;
+    this -> Kp = Kp;
+    this -> Ki = Ki;
+    this -> Kd = Kd;
+    this -> settleError = settleError;
+    this -> timeToSettle = timeToSettle;
 }
 
 /// @brief Constructor
@@ -34,12 +34,12 @@ PID::PID(float Kp, float Ki, float Kd, float settleError, float timeToSettle)
 /// @param endTime The maximum amount of time the system will run, updates in terms deltaTime
 PID::PID(float Kp, float Ki, float Kd, float settleError, float timeToSettle, float endTime)
 {
-    this->Kp = Kp;
-    this->Ki = Ki;
-    this->Kd = Kd;
-    this->settleError = settleError;
-    this->timeToSettle = timeToSettle;
-    this->endTime = endTime;
+    this -> Kp = Kp;
+    this -> Ki = Ki;
+    this -> Kd = Kd;
+    this -> settleError = settleError;
+    this -> timeToSettle = timeToSettle;
+    this -> endTime = endTime;
 }
 
 /// @brief Uses the given error & puts it through a PID formula; the output is the result

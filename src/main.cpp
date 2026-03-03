@@ -24,7 +24,7 @@ using namespace vex;
 
 //////////////////////////////////////////////////////////////////////
 
-///////////////////////// Prototypes /////////////////////////////////
+///////////////////////// Functions & Prototypes /////////////////////////
 void toggleDriveSpeed();
 void SetSlot();
 void TopSlotMajorityEnemy(int);
@@ -292,9 +292,6 @@ void usercontrol()
 
   Brain.Screen.clearScreen();
 
-  //Team select function - note: this changes depending on the slot
-  //teamColorSelect(teamColor); // Team selected
-
   backColorSensor.setLight(ledState::on);
   middleColorSensor.setLight(ledState::on);
   frontColorSensor.setLight(ledState::on);
@@ -355,8 +352,6 @@ void usercontrol()
     {
       matchLoadToggle = false;
     }
-
-
 
     if(!Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing() && !Controller1.ButtonR2.pressing())
     {

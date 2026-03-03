@@ -8,12 +8,12 @@
 /// @param forwardLeftRotationDistance Distance the forward left wheel is from the center (in)
 /// @param lateralRotationDistance Distance the lateral wheel is from the center (in)
 Odom::Odom(float forwardRightWheelDiameter, float forwardLeftWheelDiameter, float lateralWheelDiameter, float forwardRightRotationDistance, float forwardLeftRotationDistance, float lateralRotationDistance){
-    this->forwardRightWheelDiameter = forwardRightWheelDiameter;
-    this->forwardLeftWheelDiameter = forwardLeftWheelDiameter;
-    this->lateralWheelDiameter = lateralWheelDiameter;
-    this->forwardRightRotationDistance = forwardRightRotationDistance;
-    this->forwardLeftRotationDistance = forwardLeftRotationDistance;
-    this->lateralRotationDistance = lateralRotationDistance;     
+    this -> forwardRightWheelDiameter = forwardRightWheelDiameter;
+    this -> forwardLeftWheelDiameter = forwardLeftWheelDiameter;
+    this -> lateralWheelDiameter = lateralWheelDiameter;
+    this -> forwardRightRotationDistance = forwardRightRotationDistance;
+    this -> forwardLeftRotationDistance = forwardLeftRotationDistance;
+    this -> lateralRotationDistance = lateralRotationDistance;     
 
 }
 
@@ -23,23 +23,23 @@ Odom::Odom(float forwardRightWheelDiameter, float forwardLeftWheelDiameter, floa
 /// @param forwardRotationDistance Distance the forward wheel is from the center (in)
 /// @param lateralRotationDistance Distance the lateral wheel is from the center (in)
 Odom::Odom(float forwardWheelDiameter, float lateralWheelDiameter, float forwardRotationDistance, float lateralRotationDistance){
-    this->forwardRightWheelDiameter = forwardWheelDiameter;
-    this->lateralWheelDiameter = lateralWheelDiameter;
-    this->forwardRightRotationDistance = forwardRotationDistance;
-    this->lateralRotationDistance = lateralRotationDistance;
+    this -> forwardRightWheelDiameter = forwardWheelDiameter;
+    this -> lateralWheelDiameter = lateralWheelDiameter;
+    this -> forwardRightRotationDistance = forwardRotationDistance;
+    this -> lateralRotationDistance = lateralRotationDistance;
 }
 
 Odom::Odom(float wheelDiameter45, float leftRotationDistance, float rightRotationDistance){
-    this->wheelDiameter45 = wheelDiameter45;
-    this->leftRotationDistance = leftRotationDistance;
-    this->rightRotationDistance = rightRotationDistance;
+    this -> wheelDiameter45 = wheelDiameter45;
+    this -> leftRotationDistance = leftRotationDistance;
+    this -> rightRotationDistance = rightRotationDistance;
 }
 
 Odom::Odom(){
-    this->forwardRightWheelDiameter = 2.0;
-    this->forwardRightRotationDistance = 0.0;
-    this->lateralWheelDiameter = 2.0;
-    this->lateralRotationDistance = 0.0;
+    this -> forwardRightWheelDiameter = 2.0;
+    this -> forwardRightRotationDistance = 0.0;
+    this -> lateralWheelDiameter = 2.0;
+    this -> lateralRotationDistance = 0.0;
 }
 
 
@@ -61,21 +61,21 @@ float Odom::getLateralDegrees(){ return lateralDegrees; }
 
 //Mutators
 void Odom::setPosition(float xPosition, float yPosition, float heading = 0.0){
-    this->xPosition = xPosition;
-    this->yPosition = yPosition;
-    this->heading = heading;
+    this -> xPosition = xPosition;
+    this -> yPosition = yPosition;
+    this -> heading = heading;
 }
 void Odom::setHeading(float heading){
-    this->heading = heading;
+    this -> heading = heading;
 }
 void Odom::setForwardRightDegrees(float forwardDegreesR){
-    this->forwardDegreesR = forwardDegreesR;
+    this -> forwardDegreesR = forwardDegreesR;
 }
 void Odom::setForwardLeftDegrees(float forwardDegreesL){
-    this->forwardDegreesL = forwardDegreesL;
+    this -> forwardDegreesL = forwardDegreesL;
 }
 void Odom::setLateralDegrees(float lateralDegrees){
-    this->lateralDegrees = lateralDegrees;
+    this -> lateralDegrees = lateralDegrees;
 }
 
 
