@@ -19,6 +19,7 @@ float degTo180(float angle);
 float degToInches(float deg, float wheelDiameter);
 
 float degToRad(float degrees);
+float radToDeg(float radian);
 
 float inTermsOfNegative180To180(float angle);
 

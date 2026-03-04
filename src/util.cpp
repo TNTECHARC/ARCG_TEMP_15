@@ -45,11 +45,20 @@ float degToInches(float deg, float wheelDiameter)
     return (deg / 360) * (M_PI * wheelDiameter);
 }
 
-/// @brief Converts degrees to inches
+/// @brief Converts degrees to radians
 /// @param degrees 
 /// @return Radians
-float degToRad(float degrees){
+float degToRad(float degrees)
+{
     return degrees*(M_PI/180.0);
+}
+
+/// @brief Converts radians to degrees
+/// @param radian 
+/// @return degrees
+float radToDeg(float radian)
+{
+    return radian / (M_PI/180.0);
 }
 
 /// @brief Wraps an angle to be in the range [-180, 180]

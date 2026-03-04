@@ -61,13 +61,7 @@ class Drive
     void driveDistance(float distance, float minVoltage, float maxVoltage);
     void driveDistanceWithOdom(float distance);
 
-
-
     void moveable();
-
-
-
-
 
     void setMaxVoltage(float volts);
     float getMaxVoltage();
@@ -87,5 +81,18 @@ class Drive
 
     void updatePosition();
     void setPosition(float x, float y, float heading);
+
+    void driveToPosition(float x, float y, float angle, float lead, float setback);
+    
+    void driveToPosition(float x, float y, float angle
+    , float lead, float setback
+    , float driveMinVoltage, float driveMaxVoltage, float headingMaxVoltage);
+
+    void driveToPosition(float x, float y, float angle
+    , float lead, float setback
+    , float driveMinVoltage, float driveMaxVoltage, float headingMaxVoltage
+    , float driveSettleError, float driveSettleTime, float driveTimeout
+    , float driveKp, float driveKi, float driveKd
+    , float headingKp, float headingKi, float headingKd);
 
 };

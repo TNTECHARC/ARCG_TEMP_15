@@ -557,50 +557,75 @@ void Drive::setPosition(float x, float y, float heading){
     }
 }
 
-void Drive::driveDistanceTime(float distance, float settle, float minVoltage, float maxVoltage)
+void Drive::driveToPosition(float x, float y, float angle, float lead, float setback)
 {
-    // Creates PID objects for linear and angular output
-    //float Kp, float Ki, float Kd, float settleError, float timeToSettle, float endTime
-    PID linearPID(driveKp, driveKi, driveKd, driveSettleError, settle, driveEndTime);
-    PID angularPID(turnKp, turnKi, turnKd, turnSettleError, turnTimeToSettle, turnEndTime);
+    driveToPosition(x, y, angle, lead, setback, driveMinVoltage, driveMaxVoltage, turnMaxVoltage);
+}
     
-    updatePosition();
-    // Sets the starting variables for the Position and Heading
-    float startPosition = getCurrentMotorPosition();
-    float startHeading = inertial1.heading();
+void Drive::driveToPosition(float x, float y, float angle
+, float lead, float setback
+, float driveMinVoltage, float driveMaxVoltage, float headingMaxVoltage)
+{
+    driveToPosition(x, y, angle, lead, setback, driveMinVoltage, driveMaxVoltage, headingMaxVoltage, driveSettleError, driveTimeToSettle, driveEndTime, driveKp, driveKi, driveKd, turnKp, turnKi, turnKd);
+}
 
-    // Updates the distance to match the current position of the robot
-    distance += startPosition;
+void Drive::driveToPosition(float x, float y, float angle
+    , float lead, float setback
+    , float driveMinVoltage, float driveMaxVoltage, float headingMaxVoltage
+    , float driveSettleError, float driveSettleTime, float driveTimeout
+    , float driveKp, float driveKi, float driveKd
+    , float headingKp, float headingKi, float headingKd)
+{
+    float targetDistance = hypot(x - chassisOdometry.getXPosition(), y - chassisOdometry.getYPosition());
 
-    //  Loops while the linear PID has not yet settled
-    while(!linearPID.isSettled())
+    PID drivePID(driveKp, driveKi, driveKd, driveSettleError, driveSettleTime, driveTimeout);
+    //to_deg(atan2(x - chassisOdometry.getYPosition(), y - chassisOdometry.getYPosition()))-get_absolute_heading(), 
+    PID headingPID(headingKp, headingKi, headingKd, turnSettleError);
+
+    bool lineSettled = is_line_settled(x, y, angle, chassisOdometry.getXPosition(), chassisOdometry.getYPosition());
+    bool prevLineSettled = is_line_settled(x, y, angle, chassisOdometry.getXPosition(), chassisOdometry.getYPosition());
+    bool crossedCenterLine = false;
+    bool centerLineSide = is_line_settled(x, y, angle + 90, chassisOdometry.getXPosition(), chassisOdometry.getYPosition());
+    bool prevCenterLineSide = centerLineSide;
+
+    while(!drivePID.isSettled())
     {
-        updatePosition();
-        // Updates the Error for the linear values and the angular values
-        float linearError = distance - getCurrentMotorPosition();
-        float angularError = degTo180(startHeading - inertial1.heading());
+        lineSettled = is_line_settled(x, y, angle, chassisOdometry.getXPosition(), chassisOdometry.getYPosition());
+        if(lineSettled && !prevLineSettled){ break; }
+        prevLineSettled = lineSettled;
 
-        // Sets the linear output and angular output to the output of the error passed through the PID compute functions
-        float linearOutput = linearPID.compute(linearError);
-        float angularOutput = angularPID.compute(angularError);
+        centerLineSide = is_line_settled(x, y, angle + 90, chassisOdometry.getXPosition(), chassisOdometry.getYPosition());
+        if(centerLineSide != prevCenterLineSide)
+        {
+            crossedCenterLine = true;
+        }
 
-        // Clamps the values of the output to fit within the -12 to 12 volt limit of the vex motors
-        linearOutput = clamp(linearOutput, -maxVoltage, maxVoltage);
-        angularOutput = clamp(angularOutput, -maxVoltage, maxVoltage);
+        targetDistance = hypot(x - chassisOdometry.getXPosition(), y - chassisOdometry.getYPosition());
 
-        if(linearOutput > 0 && linearOutput < 1)
-            linearOutput = 1;
-        else if(linearOutput < 0 && linearOutput > -1)
-            linearOutput = -1;
+        float carrotX = x - sin(degToRad(angle)) * (lead * targetDistance + setback);
+        float carrotY = y - cos(degToRad(angle)) * (lead * targetDistance + setback);
 
-        // Drives motors according to the linear Output and includes the linear Output to keep the robot in a straight path relative to is start heading
-        driveMotors(linearOutput + angularOutput, linearOutput - angularOutput);
-        wait(3, msec);
+        float driveError = hypot(carrotX - chassisOdometry.getXPosition(), carrotY - chassisOdometry.getYPosition());
+        float headingError = degTo180(radToDeg(atan2(carrotX - chassisOdometry.getXPosition(), carrotY - chassisOdometry.getYPosition())) - inertial1.heading());
+
+        if (driveError<driveSettleError || crossedCenterLine || driveError < setback) 
+        { 
+            headingError = degTo180(angle - inertial1.heading()); 
+            driveError = targetDistance;
+        }
+        
+        float driveOutput = drivePID.compute(driveError);
+
+        float headingScaleFactor = cos(degToRad(headingError));
+        driveOutput *= headingScaleFactor;
+        headingError = reduce_negative_90_to_90(headingError);
+
+        float headingOutput = headingPID.compute(headingError);
+
+        driveOutput = clamp(driveOutput, -fabs(headingScaleFactor) * driveMaxVoltage, fabs(headingScaleFactor) * driveMaxVoltage);
+        headingOutput = clamp(headingOutput, -headingMaxVoltage, headingMaxVoltage);
+
+        driveMotors(driveOutput - headingOutput, driveOutput + headingOutput);
+        wait(10, msec);
     }
-
-    
-    // Stops the motors once PID has settled
-    brake();
-    std::cout << "\nsettle\n";
-    updatePosition();
 }
