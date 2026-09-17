@@ -614,12 +614,12 @@ void Drive::driveToPosition(float x, float y, float angle
             driveError = targetDistance;
         }
         
-        float driveOutput = drivePID.compute(driveError);
 
+        float driveOutput = drivePID.compute(driveError);
         float headingScaleFactor = cos(degToRad(headingError));
         driveOutput *= headingScaleFactor;
         headingError = reduce_negative_90_to_90(headingError);
-
+//
         float headingOutput = headingPID.compute(headingError);
 
         driveOutput = clamp(driveOutput, -fabs(headingScaleFactor) * driveMaxVoltage, fabs(headingScaleFactor) * driveMaxVoltage);
